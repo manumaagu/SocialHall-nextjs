@@ -2,7 +2,7 @@ import React from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import "../styles/Header.css";
+// import "../styles/header.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarAlt,
@@ -16,7 +16,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-custom-purple w-screen h-16 flex justify-between items-center px-14 mb-4">
-      <Link href="/">
+      <Link href="/" legacyBehavior>
         <a className="flex items-center gap-4">
           <img
             src="/images/SocialHall_Logo.png"
@@ -31,7 +31,7 @@ const Header: React.FC = () => {
 
       {user ? (
         <div className="flex gap-12 items-center">
-          <Link href="/planner">
+          <Link href="/planner" legacyBehavior>
             <a
               className={`p-2 ${
                 router.pathname === "/planner"
@@ -45,7 +45,7 @@ const Header: React.FC = () => {
               </button>
             </a>
           </Link>
-          <Link href="/posts">
+          <Link href="/posts" legacyBehavior>
             <a
               className={`p-2 ${
                 router.pathname === "/posts"
@@ -59,7 +59,7 @@ const Header: React.FC = () => {
               </button>
             </a>
           </Link>
-          <Link href="/connect-social-medias">
+          <Link href="/connect-social-medias" legacyBehavior>
             <a
               className={`p-2 ${
                 router.pathname === "/connect-social-medias"
@@ -82,12 +82,12 @@ const Header: React.FC = () => {
         </div>
       ) : (
         <div className="flex gap-8">
-          <Link href="/login">
+          <Link href="/login" legacyBehavior>
             <a>
               <button className="">Login</button>
             </a>
           </Link>
-          <Link href="/signup">
+          <Link href="/signup" legacyBehavior>
             <a>
               <button className="">Signup</button>
             </a>
