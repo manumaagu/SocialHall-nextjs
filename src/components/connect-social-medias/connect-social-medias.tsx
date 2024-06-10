@@ -139,7 +139,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Youtube"
                   icon={faYoutube}
-                  authUrl="http://localhost:3001/auth/google"
+                  authUrl="http://localhost:3000/api/auth/youtube"
                 />
               )}
 

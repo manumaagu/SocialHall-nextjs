@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getAuth } from "@clerk/nextjs/server";
-import { turso } from '@/db/turso';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
