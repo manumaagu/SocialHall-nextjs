@@ -44,8 +44,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const profile = await profileResponse.json();
 
-        console.log('LinkedIn Profile:', profile);
-
         let linkedinMedia = await db.select().from(linkedinMediaTable).where(eq(linkedinMediaTable.clerkId, userId));
 
         const followObject = {

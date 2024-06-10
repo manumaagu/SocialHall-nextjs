@@ -97,7 +97,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Twitter"
                   icon={faXTwitter}
-                  authUrl="http://localhost:3000/auth/twitter"
+                  authUrl="http://localhost:3000/api/auth/twitter"
                 />
               )}
 
