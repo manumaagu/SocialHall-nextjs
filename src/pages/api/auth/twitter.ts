@@ -1,12 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getAuth } from "@clerk/nextjs/server";
-import NodeCache from 'node-cache';
 import { TwitterApi } from 'twitter-api-v2';
+import { InsertTemporaryTokens, temporaryTokensTable } from '@/db/schemes';
+import { db } from '@/db/db';
 
-const cache = new NodeCache();
-
-
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const { userId } = getAuth(req);
 
@@ -20,8 +18,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const { url, codeVerifier, state } = client.generateOAuth2AuthLink(process.env.TWITTER_CALLBACK_URL as string, { scope: scopes });
 
-    cache.set("codeVerifier", codeVerifier, 120);
-    cache.set("state", state, 120);
+    console.log('codeVerifier', codeVerifier, 'state', state);
+
+    const newTemporaryTokens: InsertTemporaryTokens = {
+        id: userId,
+        codeVerifier: codeVerifier,
+        state: state
+    };
+
+    await db.insert(temporaryTokensTable).values(newTemporaryTokens);
 
     return res.json({ url: url });
 }

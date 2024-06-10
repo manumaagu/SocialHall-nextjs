@@ -3,9 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { randomBytes } from 'crypto';
 import { InsertLinkedinMedia, linkedinMediaTable } from '@/db/schemes';
 import { db } from '@/db/db';
-import { LinkedinMedia } from '@/models/media-linkedin';
 import { getAuth } from '@clerk/nextjs/server';
-import { asc, count, eq, getTableColumns, gt, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -15,7 +14,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const { code } = req.query;
+    const { code, error } = req.query;
+
+    if (error) {
+        res.redirect('http://localhost:3000/');
+        return;
+    }
 
     try {
         // Obtener el access token de LinkedIn

@@ -114,3 +114,12 @@ export const usersTable = sqliteTable('users', {
 
 export type InsertUser = typeof usersTable.$inferInsert;
 export type SelectUser = typeof usersTable.$inferSelect;
+
+export const temporaryTokensTable = sqliteTable('temporary_tokens', {
+    id: text('id').primaryKey(),
+    codeVerifier: text('codeVerifier').notNull(),
+    state: text('state').notNull()
+});
+
+export type InsertTemporaryTokens = typeof temporaryTokensTable.$inferInsert;
+export type SelectTemporaryTokens = typeof temporaryTokensTable.$inferSelect;

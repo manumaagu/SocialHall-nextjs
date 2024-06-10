@@ -3,63 +3,76 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { randomBytes } from 'crypto';
 import { InsertTwitterMedia, twitterMediaTable } from '@/db/schemes';
 import { db } from '@/db/db';
-import { LinkedinMedia } from '@/models/media-linkedin';
 import { getAuth } from '@clerk/nextjs/server';
-import { asc, count, eq, getTableColumns, gt, sql } from 'drizzle-orm';
-import NodeCache from 'node-cache';
 import { TwitterApi } from 'twitter-api-v2';
+import { SelectTemporaryTokens, temporaryTokensTable } from '@/db/schemes';
+import { eq } from 'drizzle-orm';
 
-const cache = new NodeCache();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-
     const { userId } = getAuth(req);
 
     if (!userId) {
         return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const { state, code } = req.query;
+    const { state, code, error } = req.query;
 
-    const codeVerifier: string = cache.get("codeVerifier") as string;
-    const stateCache = cache.get("state");
+    if (error) {
+        res.redirect('http://localhost:3000/');
+        return;
+    }
 
-    if (!codeVerifier || !state || !stateCache || !code) {
+    let temporaryTokens = await db.select().from(temporaryTokensTable).where(eq(temporaryTokensTable.id, userId));
+
+    const codeVerifier = temporaryTokens[0].codeVerifier;
+    const sessionState = temporaryTokens[0].state;
+
+    if (!codeVerifier || !state || !sessionState || !code) {
         return res.status(400).send('You denied the app or your session expired!');
     }
-    if (state !== stateCache) {
+    if (state !== sessionState) {
         return res.status(400).send('Stored tokens did not match!');
     }
 
-    const client = new TwitterApi({ clientId: process.env.TWITTER_CLIENT_ID as string, clientSecret: process.env.TWITTER_CLIENT_SECRET as string });
+    try {
+        const client = new TwitterApi({ clientId: process.env.TWITTER_CLIENT_ID as string, clientSecret: process.env.TWITTER_CLIENT_SECRET as string });
 
-    client.loginWithOAuth2({ code: code.toString(), codeVerifier, redirectUri: process.env.TWITTER_CALLBACK_URL as string })
-        .then(async ({ client: loggedClient, accessToken, refreshToken, expiresIn }) => {
-            const { data: profile } = await loggedClient.v2.me({ "user.fields": ["profile_image_url", "public_metrics"] });
+        const { client: loggedClient, accessToken, refreshToken, expiresIn } = await client.loginWithOAuth2({
+            code: code.toString(),
+            codeVerifier: codeVerifier.toString(),
+            redirectUri: process.env.TWITTER_CALLBACK_URL as string
+        });
 
-            const followObject = {
-                "date": Date.now(),
-                "count": profile.public_metrics?.followers_count,
-            }
+        const { data: profile } = await loggedClient.v2.me({ "user.fields": ["profile_image_url", "public_metrics"] });
 
-            const followArray = [followObject];
+        const followObject = {
+            "date": Date.now(),
+            "count": profile.public_metrics?.followers_count,
+        }
 
-            const twitterMedia: InsertTwitterMedia = {
-                id: randomBytes(16).toString("hex"),
-                clerkId: userId,
-                date: Date.now().toString(),
-                tokenAccess: accessToken,
-                tokenRefresh: refreshToken,
-                tokenExpiration: Date.now() + expiresIn * 1000,
-                profile_id: profile.id,
-                profile_username: profile.username,
-                profile_picture: profile.profile_image_url,
-                profile_followers: JSON.stringify(followArray),
-            };
+        const followArray = [followObject];
 
-            await db.insert(twitterMediaTable).values(twitterMedia);
+        const twitterMedia: InsertTwitterMedia = {
+            id: randomBytes(16).toString("hex"),
+            clerkId: userId,
+            date: Date.now().toString(),
+            tokenAccess: accessToken,
+            tokenRefresh: refreshToken,
+            tokenExpiration: Date.now() + expiresIn * 1000,
+            profile_id: profile.id,
+            profile_username: profile.username,
+            profile_picture: profile.profile_image_url,
+            profile_followers: JSON.stringify(followArray),
+        };
 
-            res.redirect('http://localhost:3000/');
-        })
-        .catch(() => res.status(403).send('Invalid verifier or access tokens!'));
+        await db.insert(twitterMediaTable).values(twitterMedia);
+
+        await db.delete(temporaryTokensTable).where(eq(temporaryTokensTable.id, userId));
+
+        res.redirect('http://localhost:3000/');
+    } catch (error) {
+        console.error('Error logging in with OAuth2:', error);
+        res.status(403).send('Invalid verifier or access tokens!');
+    }
 }
