@@ -3,18 +3,45 @@
 @tailwind utilities;
 
 /* Global login pages */
-.cl-internal-b3fm6y{
+/* .cl-internal-b3fm6y{
     display: none;
 }
 
 .cl-userButtonPopoverFooter {
     display: none;
 }
+*/
 
-.cl-signIn-start,
-.cl-signUp-start {
+.cl-internal-180wb59 {
+    display: none;
+}
+
+.cl-cardBox.cl-signIn-start,
+.cl-cardBox.cl-signUp-start {
     box-shadow: none;
     background-color: transparent;
+    border: none;
+}
+
+.cl-card {
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
+    border: none
+}
+
+.cl-footer {
+    z-index: 100;
+    border-radius: 0;
+    background: transparent;
+    align-items: end;
+}
+
+.cl-footerAction {
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    justify-content: end;
 }
 
 .cl-header {

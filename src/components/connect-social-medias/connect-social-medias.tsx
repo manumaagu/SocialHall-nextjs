@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import SocialMediaLogin from "../components/SocialMediaLogin";
+import SocialMediaLogin from "../SocialMediaLogin";
 import {
   faFacebookSquare,
   faXTwitter,
@@ -8,9 +8,8 @@ import {
   faTiktok,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import "../styles/App.css";
-import { useAuth } from "@clerk/clerk-react";
-import SocialMediaConnected from "../components/SocialMediaConnected";
+import { auth, currentUser } from "@clerk/nextjs/server";
+import SocialMediaConnected from "../SocialMediaConnected";
 
 interface SocialProfiles {
   twitter?: Profile;
@@ -36,11 +35,10 @@ const ConnectSocialMedias: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [linkedinTokenExpired, setLinkedinTokenExpired] = useState(false);
-  const { getToken } = useAuth();
 
   const fetchData = async () => {
     try {
-      const token = await getToken();
+      const token = await auth();
       const response = await fetch("http://localhost:3001/user/medias", {
         method: "GET",
         headers: {
@@ -99,7 +97,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Twitter"
                   icon={faXTwitter}
-                  authUrl="http://localhost:3001/auth/twitter"
+                  authUrl="http://localhost:3000/auth/twitter"
                 />
               )}
 
@@ -170,7 +168,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Linkedin"
                   icon={faLinkedin}
-                  authUrl="http://localhost:3001/auth/linkedin"
+                  authUrl="http://localhost:3000/api/auth/linkedin"
                 />
               )}
             </div>

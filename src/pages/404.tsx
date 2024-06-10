@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const NotFoundPage: React.FC = () => {
   return (
@@ -13,7 +13,7 @@ const NotFoundPage: React.FC = () => {
         alt="404 Not Found"
         className="w-64"
       />
-      <Link to="/" className="text-blue-500 underline">
+      <Link href="/" className="text-blue-500 underline">
         Volver al Home
       </Link>
     </div>
