@@ -12,14 +12,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: "Clerk user id missing" });
     }
 
-    if(!verifyUser(userId)) {
+    if (!verifyUser(userId)) {
         return res.status(401).json({ error: "Unauthorized" });
     }
 
     const oauth2Client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET,
-        process.env.GOOGLE_CALLBACK_URL
+        process.env.CLIENT_URL as string + process.env.GOOGLE_CALLBACK_URL
     );
 
     const scope = [

@@ -22,14 +22,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { code, error } = req.query;
 
     if (error) {
-        res.redirect('http://localhost:3000/');
+        res.redirect(process.env.CLIENT_URL as string);
         return;
     }
 
     const oauth2Client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET,
-        process.env.GOOGLE_CALLBACK_URL
+        process.env.CLIENT_URI as string + process.env.GOOGLE_CALLBACK_URL
     );
 
     const { tokens } = await oauth2Client.getToken(code!.toString());
@@ -79,7 +79,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         await db.insert(youtubeMediaTable).values(youtubeMedia);
 
-        res.redirect('http://localhost:3000/');
+        res.redirect(process.env.CLIENT_URL as string);
     } catch (error) {
         console.error('Error logging in with OAuth2:', error);
         res.status(403).send('Invalid verifier or access tokens!');
