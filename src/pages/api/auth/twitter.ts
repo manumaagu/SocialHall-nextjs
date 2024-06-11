@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const scopes = ['tweet.read', 'tweet.write', 'users.read', 'offline.access'];
 
-    const { url, codeVerifier, state } = client.generateOAuth2AuthLink(process.env.TWITTER_CALLBACK_URL as string, { scope: scopes });
+    const { url, codeVerifier, state } = client.generateOAuth2AuthLink( process.env.CLIENT_URL as string + process.env.TWITTER_CALLBACK_URL as string, { scope: scopes });
 
     console.log('codeVerifier', codeVerifier, 'state', state);
 

@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { state, code, error } = req.query;
 
     if (error) {
-        res.redirect('http://localhost:3000/');
+        res.redirect(process.env.CLIENT_URL as string);
         return;
     }
 
@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { client: loggedClient, accessToken, refreshToken, expiresIn } = await client.loginWithOAuth2({
             code: code.toString(),
             codeVerifier: codeVerifier.toString(),
-            redirectUri: process.env.TWITTER_CALLBACK_URL as string
+            redirectUri: process.env.CLIENT_URL as string + process.env.TWITTER_CALLBACK_URL as string
         });
 
         const { data: profile } = await loggedClient.v2.me({ "user.fields": ["profile_image_url", "public_metrics"] });
@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         await db.delete(temporaryTokensTable).where(eq(temporaryTokensTable.id, userId));
 
-        res.redirect('http://localhost:3000/');
+        res.redirect(process.env.CLIENT_URL as string);
     } catch (error) {
         console.error('Error logging in with OAuth2:', error);
         res.status(403).send('Invalid verifier or access tokens!');

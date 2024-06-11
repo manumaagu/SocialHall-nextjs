@@ -1,4 +1,3 @@
-// pages/api/linkedin/callback.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { randomBytes } from 'crypto';
 import { InsertLinkedinMedia, linkedinMediaTable } from '@/db/schemes';
@@ -22,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { code, error } = req.query;
 
     if (error) {
-        res.redirect('http://localhost:3000/');
+        res.redirect(process.env.CLIENT_URL as string);
         return;
     }
 
@@ -33,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             body: new URLSearchParams({
                 grant_type: 'authorization_code',
                 code: code as string,
-                redirect_uri: process.env.LINKEDIN_CALLBACK_URL as string,
+                redirect_uri: process.env.CLIENT_URL as string + process.env.LINKEDIN_CALLBACK_URL as string,
                 client_id: process.env.LINKEDIN_CLIENT_ID as string,
                 client_secret: process.env.LINKEDIN_CLIENT_SECRET as string,
             }),
@@ -59,7 +58,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             count: Math.floor(Math.random() * 1001),
         };
 
-        // Insert or update LinkedinMedia
         if (linkedinMedia.length === 0) {
             const newLinkedinMedia: InsertLinkedinMedia = {
                 id: randomBytes(16).toString("hex"),
@@ -79,7 +77,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             await db.update(linkedinMediaTable).set({ date: Date.now().toString(), tokenAccess: access_token, tokenExpiration: Date.now() + expires_in * 1000 }).where(eq(linkedinMediaTable.clerkId, userId));
         }
 
-        res.redirect('http://localhost:3000/');
+        res.redirect(process.env.CLIENT_URL as string);
     } catch (error) {
         console.error('LinkedIn Auth Error:', error);
         res.status(500).json({ message: 'Internal server error' });
