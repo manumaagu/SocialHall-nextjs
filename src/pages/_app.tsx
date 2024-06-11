@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import "@/styles/login.css";
 import "@/styles/app.css";
 import "@/styles/header.css";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/nextjs";
 import { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import Header from "@/components/Header";
@@ -22,7 +22,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>SocialHall</title>
       </Head>
       {showHeader && <Header />}
-      {/* {!isPublicPage && <RedirectToSignIn redirectUrl={"/login"} />} */}
       <Component {...pageProps} />
     </ClerkProvider>
   );

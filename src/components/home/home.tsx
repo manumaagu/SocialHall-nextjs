@@ -14,7 +14,7 @@ const HomePage = () => {
               <h2 className="text-4xl">
                 Streamline your social media management with our all-in-one
                 platform. From scheduling posts to engaging with your audience,
-                we&aposve got you covered.
+                we&apos;ve got you covered.
               </h2>
             </div>
             <div className="grid grid-cols-2 mx-7 mt-28 ">

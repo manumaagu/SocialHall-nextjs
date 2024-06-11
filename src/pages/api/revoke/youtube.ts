@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: "Clerk user id missing" });
     }
 
-    if(!verifyUser(userId)) {
+    if (!verifyUser(userId)) {
         return res.status(401).json({ error: "Unauthorized" });
     }
 

@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         url: 'https://www.linkedin.com/oauth/v2/authorization?' + new URLSearchParams({
             response_type: 'code',
             client_id: process.env.LINKEDIN_CLIENT_ID as string,
-            redirect_uri: process.env.LINKEDIN_CALLBACK_URL as string,
+            redirect_uri: process.env.CLIENT_URL as string + process.env.LINKEDIN_CALLBACK_URL as string,
             state: 'state', // Random string
             scope: 'openid profile email w_member_social',
         })

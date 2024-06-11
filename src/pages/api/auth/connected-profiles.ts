@@ -1,4 +1,3 @@
-// pages/api/linkedin/callback.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { youtubeMediaTable, linkedinMediaTable, twitterMediaTable } from '@/db/schemes';
 import { db } from '@/db/db';
