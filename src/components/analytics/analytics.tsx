@@ -97,17 +97,14 @@ const AnalyticsPage: React.FC = () => {
   const [analytics, setAnalytics] = useState<Analytics[]>([]);
   const [chartData, setChartData] = useState<ChartDataType>(initialChartData);
   const [chartType, setChartType] = useState<string>("line" as "line" | "bar");
-  const { getToken } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = await getToken();
         const response = await fetch("http://localhost:3000/api/auth/connected-profiles", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -180,13 +177,8 @@ const AnalyticsPage: React.FC = () => {
       return;
     }
 
-    const token = await getToken();
-
     const response = await fetch(`http://localhost:3000/api/analytics/${network}`, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     const newAnalytics = {

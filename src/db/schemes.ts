@@ -12,25 +12,13 @@ export const linkedinMediaTable = sqliteTable('media_linkedin', {
     profile_id: text('profile_id'),
     profile_username: text('profile_username'),
     profile_picture: text('profile_picture'),
-    profile_followers: text('profile_followers')  // Assuming JSON stored as text
+    profile_followers: text('profile_followers'),  // Assuming JSON stored as text
+    posts: text('posts')  // Assuming JSON stored as text
 });
 
 // Infer types for row insertions and queries
 export type InsertLinkedinMedia = typeof linkedinMediaTable.$inferInsert;
 export type SelectLinkedinMedia = typeof linkedinMediaTable.$inferSelect;
-
-export const eventTable = sqliteTable('event', {
-    id: text('id').primaryKey(),
-    clerkId: text('clerkId').notNull(),
-    socialMedia: text('socialMedia'),
-    content: text('content'),
-    pendingId: text('pendingId'),
-    date: integer('date').notNull(),
-    posted: integer('posted').notNull()  // Boolean stored as integer
-});
-
-export type InsertEvent = typeof eventTable.$inferInsert;
-export type SelectEvent = typeof eventTable.$inferSelect;
 
 export const twitterMediaTable = sqliteTable('media_twitter', {
     id: text('id').primaryKey(),
@@ -120,3 +108,16 @@ export const temporaryTokensTable = sqliteTable('temporary_tokens', {
 
 export type InsertTemporaryTokens = typeof temporaryTokensTable.$inferInsert;
 export type SelectTemporaryTokens = typeof temporaryTokensTable.$inferSelect;
+
+export const eventTable = sqliteTable('event', {
+    id: text('id').primaryKey(),
+    clerkId: text('clerkId').notNull(),
+    socialMedia: text('socialMedia'),
+    content: text('content'),
+    pendingId: text('pendingId'),
+    date: integer('date').notNull(),
+    posted: integer('posted').notNull()  // Boolean stored as integer
+});
+
+export type InsertEvent = typeof eventTable.$inferInsert;
+export type SelectEvent = typeof eventTable.$inferSelect;
