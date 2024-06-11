@@ -11,7 +11,7 @@ interface MulterAuthRequest extends NextApiRequest {
     files?: Express.Multer.File[];
 }
 
-const uploadDirectory = path.join(process.cwd(), 'uploads');
+const uploadDirectory = path.join(process.cwd(), 'src', 'uploads');
 
 if (!fs.existsSync(uploadDirectory)) {
     fs.mkdirSync(uploadDirectory, { recursive: true });
