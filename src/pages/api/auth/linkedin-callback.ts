@@ -28,7 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        // Obtener el access token de LinkedIn
         const tokenResponse = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

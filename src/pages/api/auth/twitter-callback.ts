@@ -69,6 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             profile_id: profile.id,
             profile_username: profile.username,
             profile_picture: profile.profile_image_url,
+            profile_url: `https://twitter.com/${profile.username}`,
             profile_followers: JSON.stringify(followArray),
         };
 

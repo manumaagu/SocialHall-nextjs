@@ -10,7 +10,6 @@ import {
   IconDefinition,
 } from "@fortawesome/free-brands-svg-icons";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "@clerk/clerk-react";
 
 interface IconMap {
   [key: string]: IconDefinition;
@@ -71,18 +70,15 @@ const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
 
   const { username, picture } = profile;
   const [timeLeft, setTimeLeft] = useState<Time>(calculateTimeLeft());
-  const { getToken } = useAuth();
 
   const revokeSocialMedia = async (network: string) => {
     try {
-      const token = await getToken();
       const response = await fetch(
-        `http://localhost:3001/revoke/${network.toLowerCase()}`,
+        `http://localhost:3000/api/revoke/${network.toLowerCase()}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         }
       );

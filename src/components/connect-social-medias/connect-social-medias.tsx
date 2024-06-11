@@ -8,7 +8,6 @@ import {
   faTiktok,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import { auth, currentUser } from "@clerk/nextjs/server";
 import SocialMediaConnected from "../SocialMediaConnected";
 
 interface SocialProfiles {
@@ -38,12 +37,10 @@ const ConnectSocialMedias: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const token = await auth();
-      const response = await fetch("http://localhost:3001/user/medias", {
+      const response = await fetch("http://localhost:3000/api/auth/connected-profiles", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
 
