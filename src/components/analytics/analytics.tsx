@@ -513,7 +513,7 @@ const AnalyticsPage: React.FC = () => {
             </div>
           </div>
           <div className="w-3/4 p-4">
-            <div className="flex justify-between">
+            <div className=" hidden md:flex md:justify-between">
               <div className="flex gap-4">
                 <button
                   onClick={() => setChartType("line")}
