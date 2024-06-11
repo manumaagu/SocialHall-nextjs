@@ -31,7 +31,6 @@ const PlannerPage = () => {
   const [time, setTime] = useState("");
   const [contents, setContents] = useState<{}>({});
   const [isLoading, setIsLoading] = useState(false);
-  const { getToken } = useAuth();
 
   const closeModal = useCallback(() => {
     setContents({});
@@ -48,7 +47,6 @@ const PlannerPage = () => {
 
     const dateTime = `${postDate} ${time}`;
     const dateTimestamp = new Date(dateTime).getTime();
-    const token = await getToken();
 
     Object.entries(contents).forEach(async ([network, content]) => {
       const mediaToUpload = new FormData();
@@ -98,9 +96,6 @@ const PlannerPage = () => {
           `http://localhost:3001/upload/${network}`,
           {
             method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
             body: mediaToUpload,
           }
         );
@@ -134,9 +129,6 @@ const PlannerPage = () => {
       try {
         const response = await fetch(`http://localhost:3001/post/${network}`, {
           method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           body: contentToSend,
         });
 
@@ -149,7 +141,7 @@ const PlannerPage = () => {
     });
     getEvents();
     closeModal();
-  }, [contents, postDate, time, getToken, closeModal]);
+  }, [contents, postDate, time, closeModal]);
 
   const handleDateSelect = useCallback(
     (selectInfo: DateSelectArg) => {
@@ -223,14 +215,12 @@ const PlannerPage = () => {
             `Are you sure you want to delete the event '${event.title}'`
           )
         ) {
-          const token = await getToken();
           const response = await fetch(
-            `http://localhost:3001/event/delete/${event.id}`,
+            `http://localhost:3000/api/event/delete/${event.id}`,
             {
               method: "DELETE",
               headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
               },
             }
           );
@@ -243,7 +233,7 @@ const PlannerPage = () => {
         }
       }
     },
-    [getToken]
+    []
   );
 
   const renderEventContent = useCallback((eventInfo: EventInfo) => {
@@ -264,12 +254,10 @@ const PlannerPage = () => {
 
   const getEvents = useCallback(async () => {
     try {
-      const token = await getToken();
       const response = await fetch("http://localhost:3001/event/list", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -288,16 +276,14 @@ const PlannerPage = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [getToken]);
+  }, []);
 
   const getMedias = useCallback(async () => {
     try {
-      const token = await getToken();
-      const response = await fetch("http://localhost:3001/user/medias", {
+      const response = await fetch("http://localhost:3000/api/auth/connected-profiles", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -311,7 +297,7 @@ const PlannerPage = () => {
     } catch (err) {
       console.error(err);
     }
-  }, [getToken]);
+  }, []);
 
   useEffect(() => {
     getMedias();
@@ -337,7 +323,7 @@ const PlannerPage = () => {
                 center: "title",
                 right: "dayGridMonth,timeGridWeek,timeGridDay",
               }}
-              height={820}
+              height={750}
               firstDay={1}
               initialView="dayGridMonth"
               editable={false}

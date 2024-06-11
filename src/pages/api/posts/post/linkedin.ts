@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getAuth } from "@clerk/nextjs/server";
 import { eq } from 'drizzle-orm';
-import { linkedinMediaTable } from '@/db/schemes';
+import { InsertPendingLinkedin, pendingLinkedinTable, linkedinMediaTable } from '@/db/schemes';
 import { db } from '@/db/db';
+import { randomBytes } from 'crypto';
 import { verifyUser } from '@/utils/users';
 
 
@@ -14,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: "Clerk user id missing" });
     }
 
-    if(!verifyUser(userId)) {
+    if (!verifyUser(userId)) {
         return res.status(401).json({ error: "Unauthorized" });
     }
 
@@ -24,7 +25,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(404).json({ error: "Linkedin account not found" });
     }
 
-    await db.delete(linkedinMediaTable).where(eq(linkedinMediaTable.clerkId, userId));
+    const contentToSend = req.body;
+    const postingDate = contentToSend.date;
 
-    res.status(200).json({ message: "Account revoked" });
+    const pendingLinkedin: InsertPendingLinkedin = {
+        id: randomBytes(16).toString('hex'),
+        clerkId: userId,
+        postingDate: postingDate,
+        content: contentToSend,
+    };
+
+    await db.insert(pendingLinkedinTable).values(pendingLinkedin);
+
+    res.status(200).json({ message: "Linkedin posts added to pending queue" });
+
 }

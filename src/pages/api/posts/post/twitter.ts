@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getAuth } from "@clerk/nextjs/server";
 import { eq } from 'drizzle-orm';
-import { twitterMediaTable } from '@/db/schemes';
+import { twitterMediaTable, InsertPendingTweets, pendingTweetsTable } from '@/db/schemes';
 import { db } from '@/db/db';
-import { TwitterApi } from 'twitter-api-v2';
+import { SendTweetV2Params } from 'twitter-api-v2';
+import { randomBytes } from 'crypto';
 import { verifyUser } from '@/utils/users';
 
 
@@ -25,20 +26,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(404).json({ error: "Twitter account not found" });
     }
 
-    let tokenAccess = twitterMedia[0].tokenAccess;
-    let tokenRefresh = twitterMedia[0].tokenRefresh;
-    let tokenExpiration = twitterMedia[0].tokenExpiration;
-    let client = new TwitterApi({ clientId: process.env.TWITTER_CLIENT_ID as string });
+    const contentToSend = req.body;
+    const postingDate = contentToSend.date;
 
-    if (tokenExpiration && Date.now() >= tokenExpiration) {  // Token expired 
-        client.revokeOAuth2Token(tokenRefresh!, 'refresh_token');
-    }
+    let tweets: SendTweetV2Params[] = [];
 
-    client.revokeOAuth2Token(tokenAccess!, 'access_token');
+    contentToSend.forEach((tweet: string) => {
+        tweets.push({ text: tweet });
+    });
 
-    console.log(`[TWITTER] Account revoked for user ${userId}`);
+    const pendingTweet: InsertPendingTweets = {
+        id: randomBytes(16).toString('hex'),
+        clerkId: userId,
+        postingDate: postingDate,
+        content: JSON.stringify(tweets),
+    };
 
-    await db.delete(twitterMediaTable).where(eq(twitterMediaTable.clerkId, userId));
+    await db.insert(pendingTweetsTable).values(pendingTweet);
 
-    res.status(200).json({ message: "Account revoked" });
+    res.status(200).json({ message: "Tweets added to pending queue" });
+
 }

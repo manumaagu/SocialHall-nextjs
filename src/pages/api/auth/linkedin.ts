@@ -3,6 +3,7 @@ import { getAuth } from "@clerk/nextjs/server";
 import { usersTable } from '@/db/schemes';
 import { db } from '@/db/db';
 import { eq } from 'drizzle-orm';
+import { verifyUser } from '@/utils/users';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -12,9 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: "Clerk user id missing" });
     }
 
-    const dbUser = await db.select().from(usersTable).where(eq(usersTable.clerkId, userId));
-
-    if (!dbUser[0] || dbUser.length !== 1) {
+    if(!verifyUser(userId)) {
         return res.status(401).json({ error: "Unauthorized" });
     }
 
