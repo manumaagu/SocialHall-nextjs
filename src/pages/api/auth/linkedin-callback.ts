@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: "Clerk user id missing" });
     }
 
-    if(!verifyUser(userId)) {
+    if (!verifyUser(userId)) {
         return res.status(401).json({ error: "Unauthorized" });
     }
 
@@ -76,11 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             await db.insert(linkedinMediaTable).values(newLinkedinMedia);
         } else {
 
-            linkedinMedia[0].date = Date.now().toString();
-            linkedinMedia[0].tokenAccess = access_token;
-            linkedinMedia[0].tokenExpiration = Date.now() + expires_in * 1000;
-
-            await db.update(linkedinMediaTable).set(linkedinMedia[0]);
+            await db.update(linkedinMediaTable).set({ date: Date.now().toString(), tokenAccess: access_token, tokenExpiration: Date.now() + expires_in * 1000 }).where(eq(linkedinMediaTable.clerkId, userId));
         }
 
         res.redirect('http://localhost:3000/');
