@@ -75,7 +75,6 @@ export type SelectYoutubeMedia = typeof youtubeMediaTable.$inferSelect;
 export const pendingLinkedinTable = sqliteTable('pending_linkedin', {
     id: text('id').primaryKey(),
     clerkId: text('clerkId').notNull(),
-    twitterId: text('twitterId'),
     postingDate: integer('postingDate').notNull(),
     contentType: text('contentType'),
     content: text('content')  // Assuming JSON stored as text, adjust if different
@@ -86,7 +85,6 @@ export type SelectPendingLinkedin = typeof pendingLinkedinTable.$inferSelect;
 
 export const pendingTweetsTable = sqliteTable('pending_tweets', {
     id: text('id').primaryKey(),
-    twitterId: text('twitterId'),
     clerkId: text('clerkId').notNull(),
     postingDate: integer('postingDate').notNull(),
     content: text('content')  // Assuming JSON stored as text, adjust if different
@@ -97,7 +95,6 @@ export type SelectPendingTweets = typeof pendingTweetsTable.$inferSelect;
 
 export const pendingYoutubeTable = sqliteTable('pending_youtube', {
     id: text('id').primaryKey(),
-    twitterId: text('twitterId'),
     clerkId: text('clerkId').notNull(),
     postingDate: integer('postingDate').notNull(),
     content: text('content')  // Assuming JSON stored as text, adjust if different

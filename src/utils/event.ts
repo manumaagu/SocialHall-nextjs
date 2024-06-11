@@ -1,25 +1,3 @@
-let eventGuid = 0
-let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
-
-export const INITIAL_EVENTS = [
-    {
-        id: createEventId(),
-        title: 'All-day event',
-        start: todayStr,
-        resourceId: 'a',
-    },
-    {
-        id: createEventId(),
-        title: 'Timed event',
-        start: todayStr + 'T12:00:00',
-        resourceId: 'b',
-    }
-]
-
-export function createEventId() {
-    return String(eventGuid++)
-}
-
 /**
  * Returns specific color for each social media
  * @param socialMedia
@@ -36,4 +14,30 @@ export function socialMediaColor(socialMedia: string): string {
         default:
             return '#000000';
     }
+}
+
+/**
+ * Creates a new event
+ * @param userId - Clerk user id
+ * @param socialMedia - Social media name
+ * @param pendingId - Pending post id
+ * @param date - Date of the event
+ * @param content - Content of the pending post
+ * @returns 
+ */
+export async function createEvent(userId: string, socialMedia: string, pendingId: string, date: number, content: string) {
+
+    const body = {
+        userId: userId,
+        socialMedia: socialMedia,
+        pendingId: pendingId,
+        date: date,
+        content: content
+    };
+
+    await fetch('http://localhost:3000/api/events/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
 }

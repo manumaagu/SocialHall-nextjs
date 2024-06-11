@@ -108,7 +108,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Facebook"
                   icon={faFacebookSquare}
-                  authUrl="http://localhost:3001/auth/facebook"
+                  authUrl="http://localhost:3000/api/auth/facebook"
                 />
               )}
 
@@ -122,7 +122,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Tiktok"
                   icon={faTiktok}
-                  authUrl="http://localhost:3001/auth/tiktok"
+                  authUrl="http://localhost:3000/api/auth/tiktok"
                 />
               )}
 
@@ -150,7 +150,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Instagram"
                   icon={faInstagram}
-                  authUrl="http://localhost:3001/auth/instagram"
+                  authUrl="http://localhost:3000/api/auth/instagram"
                 />
               )}
 

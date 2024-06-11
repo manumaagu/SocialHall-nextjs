@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPen } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { useAuth } from "@clerk/clerk-react";
 import {
   faFacebookSquare,
   faXTwitter,
@@ -42,17 +41,14 @@ const PostPage = () => {
   const [posts, setPosts] = useState<TwitterPost[]>();
   const [loading, setLoading] = useState<Boolean>(true);
   const [selectedNetwork, setSelectedNetwork] = useState<string | null>(null);
-  const { getToken } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = await getToken();
-        const response = await fetch("http://localhost:3001/user/medias", {
+        const response = await fetch("http://localhost:3000/api/auth/connected-profiles", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -102,12 +98,10 @@ const PostPage = () => {
     setLoading(true);
 
     try {
-      const token = await getToken();
-      const response = await fetch(`http://localhost:3001/post/${network}`, {
+      const response = await fetch(`http://localhost:3000/api/posts/list/${network}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -133,15 +127,13 @@ const PostPage = () => {
   async function deletePost(network: string, id: string): Promise<void> {
     setSelectedNetwork(network);
 
-    const url = `http://localhost:3001/post/${network}/${id}`;
+    const url = `http://localhost:3000/api/posts/delete/${network}/${id}`;
 
     try {
-      const token = await getToken();
       const response = await fetch(url, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
 

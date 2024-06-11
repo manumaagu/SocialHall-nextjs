@@ -103,7 +103,7 @@ const AnalyticsPage: React.FC = () => {
     const fetchData = async () => {
       try {
         const token = await getToken();
-        const response = await fetch("http://localhost:3001/user/medias", {
+        const response = await fetch("http://localhost:3000/api/auth/connected-profiles", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -182,7 +182,7 @@ const AnalyticsPage: React.FC = () => {
 
     const token = await getToken();
 
-    const response = await fetch(`http://localhost:3001/analytics/${network}`, {
+    const response = await fetch(`http://localhost:3000/api/analytics/${network}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

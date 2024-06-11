@@ -38,12 +38,10 @@ const PlannerPage = () => {
   }, []);
 
   const handleContentChange = useCallback((content: AllSocialMediaContent) => {
-    console.log(content);
     setContents(content);
   }, []);
 
   const saveContent = useCallback(async () => {
-    console.log(contents);
 
     const dateTime = `${postDate} ${time}`;
     const dateTimestamp = new Date(dateTime).getTime();
@@ -52,8 +50,6 @@ const PlannerPage = () => {
       const mediaToUpload = new FormData();
       const contentToSend = new FormData();
       contentToSend.append("date", dateTimestamp.toString());
-
-      console.log(content);
 
       switch (network.toLowerCase()) {
         case "twitter":
@@ -93,7 +89,7 @@ const PlannerPage = () => {
 
       if (mediaToUpload.has("media[0]")) {
         const response = await fetch(
-          `http://localhost:3001/upload/${network}`,
+          `http://localhost:3000/api/upload/${network}`,
           {
             method: "POST",
             body: mediaToUpload,
@@ -127,7 +123,7 @@ const PlannerPage = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:3001/post/${network}`, {
+        const response = await fetch(`http://localhost:3000/api/posts/post/${network}`, {
           method: "POST",
           body: contentToSend,
         });
@@ -135,11 +131,12 @@ const PlannerPage = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
+
+        getEvents();
       } catch (err) {
         console.error(err);
       }
     });
-    getEvents();
     closeModal();
   }, [contents, postDate, time, closeModal]);
 
@@ -216,7 +213,7 @@ const PlannerPage = () => {
           )
         ) {
           const response = await fetch(
-            `http://localhost:3000/api/event/delete/${event.id}`,
+            `http://localhost:3000/api/events/delete/${event.id}`,
             {
               method: "DELETE",
               headers: {
@@ -254,7 +251,7 @@ const PlannerPage = () => {
 
   const getEvents = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:3001/event/list", {
+      const response = await fetch("http://localhost:3000/api/events/list", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -323,7 +320,7 @@ const PlannerPage = () => {
                 center: "title",
                 right: "dayGridMonth,timeGridWeek,timeGridDay",
               }}
-              height={750}
+              height={800}
               firstDay={1}
               initialView="dayGridMonth"
               editable={false}
