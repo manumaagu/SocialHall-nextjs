@@ -58,7 +58,7 @@ const Header: React.FC = () => {
         <div className="hidden md:flex md:flex-row md:gap-12 lg:gap-6">
           <Link href="/planner" legacyBehavior>
             <a
-              className={`p-2 ${
+              className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis ${
                 router.pathname === "/planner"
                   ? "active"
                   : "hover:bg-custom-purple-dark-hover hover:text-white justify-center"
@@ -72,7 +72,7 @@ const Header: React.FC = () => {
           </Link>
           <Link href="/posts" legacyBehavior>
             <a
-              className={`p-2 ${
+              className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis ${
                 router.pathname === "/posts"
                   ? "active"
                   : "hover:bg-custom-purple-dark-hover hover:text-white"
@@ -86,7 +86,7 @@ const Header: React.FC = () => {
           </Link>
           <Link href="/connect-social-medias" legacyBehavior>
             <a
-              className={`p-2 ${
+              className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis ${
                 router.pathname === "/connect-social-medias"
                   ? "active"
                   : "hover:bg-custom-purple-dark-hover hover:text-white"
