@@ -11,6 +11,7 @@ import {
   faBars,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
+import Sidebar from "./Sidebar";
 
 const Header: React.FC = () => {
   const { user } = useUser();
@@ -20,6 +21,10 @@ const Header: React.FC = () => {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const closeMenu = () => {
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -44,67 +49,66 @@ const Header: React.FC = () => {
             className="w-12 h-12 invert"
           />
           <h1 className="text-4xl font-bold text-center text-white">
-            SOCIALHALL
+            <span className="lg:inline md:inline">SOCIALHALL</span>
           </h1>
         </a>
       </Link>
 
-      <div
-      // className={` bg-custom-purple transform ${
-      //   isOpen ? "translate-x-0" : ""
-      // } transition-transform duration-300 ease-in-out z-50 md:static md:flex md:gap-12 md:items-center`}
-      >
-        {user ? (
-          <div className="hidden md:flex md:flex-row md:gap-12">
-            <Link href="/planner" legacyBehavior>
-              <a
-                className={`p-2 ${
-                  router.pathname === "/planner"
-                    ? "active"
-                    : "hover:bg-custom-purple-dark-hover hover:text-white"
-                }`}
-              >
-                <button className="text-2xl p-1 rounded-lg h-full flex-grow">
-                  <FontAwesomeIcon icon={faCalendarAlt} className="mr-4" />
-                  Planner
-                </button>
-              </a>
-            </Link>
-            <Link href="/posts" legacyBehavior>
-              <a
-                className={`p-2 ${
-                  router.pathname === "/posts"
-                    ? "active"
-                    : "hover:bg-custom-purple-dark-hover hover:text-white"
-                }`}
-              >
-                <button className="text-2xl p-1 rounded-lg h-full flex-grow">
-                  <FontAwesomeIcon icon={faStickyNote} className="mr-4" />
-                  Posts
-                </button>
-              </a>
-            </Link>
-            <Link href="/connect-social-medias" legacyBehavior>
-              <a
-                className={`p-2 ${
-                  router.pathname === "/connect-social-medias"
-                    ? "active"
-                    : "hover:bg-custom-purple-dark-hover hover:text-white"
-                }`}
-              >
-                <button className="text-2xl p-1 rounded-lg h-full flex-grow">
-                  <FontAwesomeIcon icon={faBorderAll} className="mr-4" />
-                  Connect Social Medias
-                </button>
-              </a>
-            </Link>
-          </div>
-        ) : null}
-      </div>
+      {user ? (
+        <div className="hidden md:flex md:flex-row md:gap-12 lg:gap-6">
+          <Link href="/planner" legacyBehavior>
+            <a
+              className={`p-2 ${
+                router.pathname === "/planner"
+                  ? "active"
+                  : "hover:bg-custom-purple-dark-hover hover:text-white justify-center"
+              }`}
+            >
+              <button className="text-2xl p-1 rounded-lg h-full flex-grow">
+                <FontAwesomeIcon icon={faCalendarAlt} />
+                <span className="hidden lg:inline lg:ml-4">Planner</span>
+              </button>
+            </a>
+          </Link>
+          <Link href="/posts" legacyBehavior>
+            <a
+              className={`p-2 ${
+                router.pathname === "/posts"
+                  ? "active"
+                  : "hover:bg-custom-purple-dark-hover hover:text-white"
+              }`}
+            >
+              <button className="text-2xl p-1 rounded-lg h-full flex-grow">
+                <FontAwesomeIcon icon={faStickyNote} />
+                <span className="hidden lg:inline lg:ml-4">Posts</span>
+              </button>
+            </a>
+          </Link>
+          <Link href="/connect-social-medias" legacyBehavior>
+            <a
+              className={`p-2 ${
+                router.pathname === "/connect-social-medias"
+                  ? "active"
+                  : "hover:bg-custom-purple-dark-hover hover:text-white"
+              }`}
+            >
+              <button className="text-2xl p-1 rounded-lg h-full flex-grow">
+                <FontAwesomeIcon icon={faBorderAll} />
+                <span className="hidden lg:inline lg:ml-4">Connect Social Medias</span>
+              </button>
+            </a>
+          </Link>
+        </div>
+      ) : null}
 
       {user ? (
-        <div>
+        <div className="flex flex-row gap-4">
           <UserButton afterSignOutUrl="/" showName={!isMobile} />
+          <div className="flex md:hidden">  
+            <button onClick={toggleMenu} className="text-white text-3xl">
+              <FontAwesomeIcon icon={isOpen ? faTimes : faBars} className="w-6" />
+            </button>
+          </div>
         </div>
       ) : (
         <div className="flex gap-8">
@@ -120,14 +124,8 @@ const Header: React.FC = () => {
           </Link>
         </div>
       )}
-      <div className="flex md:hidden">
-        <button onClick={toggleMenu} className="text-white text-3xl">
-          <FontAwesomeIcon icon={isOpen ? faTimes : faBars} />
-        </button>
-      </div>
-      {isOpen && (
-        <div className=" " ></div>
-        )}
+
+      <Sidebar isOpen={isOpen} closeMenu={closeMenu} />
     </header>
   );
 };
