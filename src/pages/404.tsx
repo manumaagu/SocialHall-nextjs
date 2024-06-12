@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const NotFoundPage: React.FC = () => {
   return (
@@ -8,7 +9,7 @@ const NotFoundPage: React.FC = () => {
       <p className="text-lg text-gray-600 mb-8">
         Lo sentimos, la página que buscas no existe.
       </p>
-      <img
+      <Image
         src="https://via.placeholder.com/300"
         alt="404 Not Found"
         className="w-64"

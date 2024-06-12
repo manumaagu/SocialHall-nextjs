@@ -1,10 +1,11 @@
 import { SignIn } from "@clerk/nextjs";
+import Image from "next/image";
 
 export default function Page() {
   return (
     <div className="grid grid-cols-login gap-11 h-screen">
       <div className="bg-custom-purple content-center">
-        <img className="m-center" src="/images/Iphone_mockup.png"></img>
+        <Image className="m-center" src="/images/Iphone_mockup.png" alt={""}/>
       </div>
       <div className="self-center gap-1">
         <h1 className="text-6xl text-center mb-2">Welcome to SocialHall</h1>

@@ -10,6 +10,7 @@ import {
   IconDefinition,
 } from "@fortawesome/free-brands-svg-icons";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
 
 interface IconMap {
   [key: string]: IconDefinition;
@@ -185,7 +186,7 @@ const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
       </div>
       <div className="flex p-4 h-26 items-center text-xl border-2 rounded border-black-light border-opacity-70 text-center justify-between bg-gray-light">
         <div className="flex items-center flex-grow">
-          <img
+          <Image
             className="rounded-full mr-4 max-h-12"
             src={picture}
             alt={`${network} profile`}
