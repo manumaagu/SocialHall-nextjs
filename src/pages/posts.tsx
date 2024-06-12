@@ -11,7 +11,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import ReactLoading from "react-loading";
-import Link  from "next/link";
+import Link from "next/link";
 
 interface SocialProfiles {
   twitter?: Profile;
@@ -45,18 +45,21 @@ const PostPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/auth/connected-profiles", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://localhost:3000/api/auth/connected-profiles",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
 
-        const data = await response.json();;
+        const data = await response.json();
         setProfiles(data);
       } catch (err) {
         console.error(err);
@@ -98,12 +101,15 @@ const PostPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/list/${network}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/posts/list/${network}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.status === 404) {
         setPosts([]);
@@ -182,8 +188,10 @@ const PostPage = () => {
       {!loading && (
         <main className="flex flex-1">
           <div className="w-1/4 p-4 bg-gray-100 border-r-2 border-r-black-light mb-4">
-          <h1 className="text-2xl font-bold mb-4 text-center">
-              <span className="hidden md:inline md:truncate md:overflow-auto ">Social Media</span>
+            <h1 className="text-2xl font-bold mb-4 text-center">
+              <span className="hidden md:inline md:truncate md:overflow-auto ">
+                Social Media
+              </span>
               <FontAwesomeIcon
                 icon={faShareNodes}
                 className="inline md:hidden"
@@ -193,42 +201,28 @@ const PostPage = () => {
             <div className="flex flex-col space-y-2 justify-center">
               {connectedSocialNetworks.length > 0 ? (
                 connectedSocialNetworks.map((network) => (
-                  // <button
-                  //   key={network}
-                  //   onClick={() => getPosts(network)}
-                  //   className={`py-2 px-4 text-gray-800 rounded bg-custom-purple hover:bg-custom-purple-dark-hover hover:text-white ${
-                  //     selectedNetwork === network
-                  //       ? "bg-custom-purple-dark text-white"
-                  //       : "bg-custom-purple"
-                  //   }`}
-                  // >
-                  //   {network.charAt(0).toUpperCase() + network.slice(1)}
-                  //   <FontAwesomeIcon
-                  //     icon={getSocialIcon(network)}
-                  //     className="ml-2"
-                  //   />
-                  // </button>
                   <button
-                  key={network}
-                  onClick={() => getPosts(network)}
-                  className={`py-2 px-4 text-gray-800 rounded shadow bg-custom-purple hover:bg-custom-purple-dark-hover hover:text-white ${
-                    selectedNetwork === network
-                      ? "bg-custom-purple-dark text-white"
-                      : "bg-custom-purple"
-                  }`}
-                  title={network.charAt(0).toUpperCase() + network.slice(1)}
-                >
-                  <span className="hidden md:inline">
-                    {network.charAt(0).toUpperCase() + network.slice(1)}
-                  </span>
-                  <FontAwesomeIcon
-                    icon={getSocialIcon(network)}
-                    className="ml-2"
-                  />
-                </button>
+                    key={network}
+                    onClick={() => getPosts(network)}
+                    className={`py-2 px-4 text-gray-800 rounded shadow bg-custom-purple hover:bg-custom-purple-dark-hover hover:text-white ${
+                      selectedNetwork === network
+                        ? "bg-custom-purple-dark text-white"
+                        : "bg-custom-purple"
+                    }`}
+                    title={network.charAt(0).toUpperCase() + network.slice(1)}
+                  >
+                    <span className="hidden md:inline">
+                      {network.charAt(0).toUpperCase() + network.slice(1)}
+                    </span>
+                    <FontAwesomeIcon
+                      icon={getSocialIcon(network)}
+                      className="ml-2"
+                    />
+                  </button>
                 ))
               ) : (
-                <Link href={"/connect-social-medias"}
+                <Link
+                  href={"/connect-social-medias"}
                   className="py-2 px-4 font-bold bg-custom-purple text-center hover:bg-custom-purple-dark-hover hover:text-white rounded"
                 >
                   <button>Click here to connect social media</button>
