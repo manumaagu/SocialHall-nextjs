@@ -40,7 +40,7 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <header className="bg-custom-purple w-screen h-16 flex justify-between items-center px-14 mb-4">
+    <header className="bg-custom-purple w-screen min-h-16 flex justify-between items-center px-14 mb-4">
       <Link href="/" legacyBehavior>
         <a className="flex items-center gap-4">
           <img
@@ -55,7 +55,7 @@ const Header: React.FC = () => {
       </Link>
 
       {user ? (
-        <div className="hidden md:flex md:flex-row md:gap-12 lg:gap-6">
+        <div className="hidden md:flex md:flex-row md:gap-12 lg:gap-6 min-h-16">
           <Link href="/planner" legacyBehavior>
             <a
               className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis ${

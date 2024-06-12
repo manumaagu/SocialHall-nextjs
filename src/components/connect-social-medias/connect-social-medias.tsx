@@ -83,7 +83,7 @@ const ConnectSocialMedias: React.FC = () => {
             Conecta tus redes sociales
           </h1>
           <div className="flex flex-col items-center mt-8">
-            <div className="grid grid-cols-2 gap-20 border-l border-r px-8">
+            <div className="grid grid-cols-1 gap-20 border-l border-r px-8 lg:grid-cols-2">
               {data?.profiles.twitter ? (
                 <SocialMediaConnected
                   network="Twitter"
