@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPen, faShareNodes } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import {
   faFacebookSquare,
@@ -182,27 +182,50 @@ const PostPage = () => {
       {!loading && (
         <main className="flex flex-1">
           <div className="w-1/4 p-4 bg-gray-100 border-r-2 border-r-black-light mb-4">
-            <h1 className="text-2xl font-bold mb-4 text-center">
-              Social Media
+          <h1 className="text-2xl font-bold mb-4 text-center">
+              <span className="hidden md:inline md:truncate md:overflow-auto ">Social Media</span>
+              <FontAwesomeIcon
+                icon={faShareNodes}
+                className="inline md:hidden"
+                title="Social Media"
+              />
             </h1>
             <div className="flex flex-col space-y-2 justify-center">
               {connectedSocialNetworks.length > 0 ? (
                 connectedSocialNetworks.map((network) => (
+                  // <button
+                  //   key={network}
+                  //   onClick={() => getPosts(network)}
+                  //   className={`py-2 px-4 text-gray-800 rounded bg-custom-purple hover:bg-custom-purple-dark-hover hover:text-white ${
+                  //     selectedNetwork === network
+                  //       ? "bg-custom-purple-dark text-white"
+                  //       : "bg-custom-purple"
+                  //   }`}
+                  // >
+                  //   {network.charAt(0).toUpperCase() + network.slice(1)}
+                  //   <FontAwesomeIcon
+                  //     icon={getSocialIcon(network)}
+                  //     className="ml-2"
+                  //   />
+                  // </button>
                   <button
-                    key={network}
-                    onClick={() => getPosts(network)}
-                    className={`py-2 px-4 text-gray-800 rounded bg-custom-purple hover:bg-custom-purple-dark-hover hover:text-white ${
-                      selectedNetwork === network
-                        ? "bg-custom-purple-dark text-white"
-                        : "bg-custom-purple"
-                    }`}
-                  >
+                  key={network}
+                  onClick={() => getPosts(network)}
+                  className={`py-2 px-4 text-gray-800 rounded shadow bg-custom-purple hover:bg-custom-purple-dark-hover hover:text-white ${
+                    selectedNetwork === network
+                      ? "bg-custom-purple-dark text-white"
+                      : "bg-custom-purple"
+                  }`}
+                  title={network.charAt(0).toUpperCase() + network.slice(1)}
+                >
+                  <span className="hidden md:inline">
                     {network.charAt(0).toUpperCase() + network.slice(1)}
-                    <FontAwesomeIcon
-                      icon={getSocialIcon(network)}
-                      className="ml-2"
-                    />
-                  </button>
+                  </span>
+                  <FontAwesomeIcon
+                    icon={getSocialIcon(network)}
+                    className="ml-2"
+                  />
+                </button>
                 ))
               ) : (
                 <Link href={"/connect-social-medias"}
