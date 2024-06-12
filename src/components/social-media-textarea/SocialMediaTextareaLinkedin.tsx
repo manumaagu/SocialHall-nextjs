@@ -4,7 +4,6 @@ import {
   LinkedinContent,
   shareMediaCategory,
 } from "../../interfaces/social-media";
-import Image from "next/image";
 
 interface SocialMediaTextareaLinkedinProps {
   value: LinkedinContent;
@@ -142,7 +141,7 @@ const SocialMediaTextareaLinkedin: React.FC<
         {files.map((file) => (
           <div key={file.name} className="inline-block mr-4 mb-4">
             {file.type.startsWith("image/") ? (
-              <Image
+              <img
                 src={file.preview}
                 className="w-32 h-32 object-cover rounded"
                 alt={file.name}

@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { faChartSimple } from "@fortawesome/free-solid-svg-icons";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
-import Image from "next/image";
 
 const HomePage = () => {
   return (
@@ -49,7 +48,7 @@ const HomePage = () => {
                 </div>
               </div>
               <div>
-                <Image src="https://placehold.jp/150x150.png" alt={""}/>
+                <img src="https://placehold.jp/150x150.png"></img>
               </div>
             </div>
           </section>

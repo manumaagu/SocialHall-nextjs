@@ -12,7 +12,6 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
-import Image from "next/image";
 
 const Header: React.FC = () => {
   const { user } = useUser();
@@ -44,7 +43,7 @@ const Header: React.FC = () => {
     <header className="bg-custom-purple w-screen min-h-16 flex justify-between items-center px-14 mb-4">
       <Link href="/" legacyBehavior>
         <a className="flex items-center gap-4">
-          <Image
+          <img
             src="/images/SocialHall_Logo.png"
             alt="Logo"
             className="w-12 h-12 invert"
