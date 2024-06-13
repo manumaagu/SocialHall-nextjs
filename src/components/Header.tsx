@@ -55,7 +55,7 @@ const Header: React.FC = () => {
       </Link>
 
       {user ? (
-        <div className="hidden md:flex md:flex-row md:gap-12 lg:gap-6 min-h-16">
+        <div className="hidden md:flex md:flex-row md:gap-12 lg:gap-6">
           <Link href="/planner" legacyBehavior>
             <a
               className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis ${
@@ -64,7 +64,7 @@ const Header: React.FC = () => {
                   : "hover:bg-custom-purple-dark-hover hover:text-white justify-center"
               }`}
             >
-              <button className="text-2xl p-1 rounded-lg h-full flex-grow">
+              <button className="text-base p-1 rounded-lg h-full flex-grow">
                 <FontAwesomeIcon icon={faCalendarAlt} />
                 <span className="hidden lg:inline lg:ml-4">Planner</span>
               </button>
@@ -78,7 +78,7 @@ const Header: React.FC = () => {
                   : "hover:bg-custom-purple-dark-hover hover:text-white"
               }`}
             >
-              <button className="text-2xl p-1 rounded-lg h-full flex-grow">
+              <button className="text-base p-1 rounded-lg h-full flex-grow">
                 <FontAwesomeIcon icon={faStickyNote} />
                 <span className="hidden lg:inline lg:ml-4">Posts</span>
               </button>
@@ -92,7 +92,7 @@ const Header: React.FC = () => {
                   : "hover:bg-custom-purple-dark-hover hover:text-white"
               }`}
             >
-              <button className="text-2xl p-1 rounded-lg h-full flex-grow">
+              <button className="text-base p-1 rounded-lg h-full flex-grow">
                 <FontAwesomeIcon icon={faBorderAll} />
                 <span className="hidden lg:inline lg:ml-4">Connect Social Medias</span>
               </button>
