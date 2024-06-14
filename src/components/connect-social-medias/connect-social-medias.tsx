@@ -37,12 +37,15 @@ const ConnectSocialMedias: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/connected-profiles", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/auth/connected-profiles",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -51,8 +54,9 @@ const ConnectSocialMedias: React.FC = () => {
       const data = await response.json();
       setData(data);
       Object.keys(data.profiles).forEach((key) => {
-        if(key !== 'linkedin') return;
-        if(data.profiles[key].date >= Date.now()) setLinkedinTokenExpired(false);
+        if (key !== "linkedin") return;
+        if (data.profiles[key].date >= Date.now())
+          setLinkedinTokenExpired(false);
         else setLinkedinTokenExpired(true);
       });
     } catch (err) {
@@ -64,7 +68,7 @@ const ConnectSocialMedias: React.FC = () => {
 
   const handleLinkedinExpired = () => {
     setLinkedinTokenExpired(true);
-  }
+  };
 
   useEffect(() => {
     fetchData();
@@ -77,7 +81,10 @@ const ConnectSocialMedias: React.FC = () => {
 
   return (
     <>
-      {!loading && (
+      <div className="flex justify-center items-center h-100% w-full">
+        <img src="/images/image.png"></img>
+      </div>
+      {/* {!loading && (
         <>
           <h1 className="text-6xl text-center mt-10">
             Conecta tus redes sociales
@@ -171,7 +178,7 @@ const ConnectSocialMedias: React.FC = () => {
             </div>
           </div>
         </>
-      )}
+      )} */}
     </>
   );
 };

@@ -46,9 +46,9 @@ const Header: React.FC = () => {
           <img
             src="/images/SocialHall_Logo.png"
             alt="Logo"
-            className="w-12 h-12 invert"
+            className="w-12 h-12"
           />
-          <h1 className="text-4xl font-bold text-center text-white">
+          <h1 className="text-4xl font-bold text-center text-black">
             <span className="lg:inline md:inline">SOCIALHALL</span>
           </h1>
         </a>
@@ -58,15 +58,15 @@ const Header: React.FC = () => {
         <div className="hidden md:flex md:flex-row md:gap-12 lg:gap-6">
           <Link href="/planner" legacyBehavior>
             <a
-              className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis ${
+              className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis text-black ${
                 router.pathname === "/planner"
                   ? "active"
-                  : "hover:bg-custom-purple-dark-hover hover:text-white justify-center"
+                  : "hover:bg-custom-purple-dark-hover hover:text-black justify-center"
               }`}
             >
               <button className="text-base p-1 rounded-lg h-full flex-grow">
-                <FontAwesomeIcon icon={faCalendarAlt} />
-                <span className="hidden lg:inline lg:ml-4">Planner</span>
+                <FontAwesomeIcon icon={faCalendarAlt} className="inline lg:hidden lg:ml-4" />
+                <span className="hidden lg:inline">Planner</span>
               </button>
             </a>
           </Link>
@@ -75,26 +75,26 @@ const Header: React.FC = () => {
               className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis ${
                 router.pathname === "/posts"
                   ? "active"
-                  : "hover:bg-custom-purple-dark-hover hover:text-white"
+                  : "hover:bg-custom-purple-dark-hover hover:text-black text-black"
               }`}
             >
               <button className="text-base p-1 rounded-lg h-full flex-grow">
-                <FontAwesomeIcon icon={faStickyNote} />
-                <span className="hidden lg:inline lg:ml-4">Posts</span>
+                <FontAwesomeIcon icon={faStickyNote} className="inline lg:hidden lg:ml-4" />
+                <span className="hidden lg:inline">Posts</span>
               </button>
             </a>
           </Link>
           <Link href="/connect-social-medias" legacyBehavior>
             <a
-              className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis ${
+              className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis text-black ${
                 router.pathname === "/connect-social-medias"
                   ? "active"
-                  : "hover:bg-custom-purple-dark-hover hover:text-white"
+                  : "hover:bg-custom-purple-dark-hover hover:text-black"
               }`}
             >
-              <button className="text-base p-1 rounded-lg h-full flex-grow">
-                <FontAwesomeIcon icon={faBorderAll} />
-                <span className="hidden lg:inline lg:ml-4">Connect Social Medias</span>
+              <button className=" text-base p-1 rounded-lg h-full flex-grow">
+                <FontAwesomeIcon icon={faBorderAll} className="inline lg:hidden lg:ml-4" />
+                <span className="hidden lg:inline">Connect Social Medias</span>
               </button>
             </a>
           </Link>
@@ -105,7 +105,7 @@ const Header: React.FC = () => {
         <div className="flex flex-row gap-4">
           <UserButton afterSignOutUrl="/" showName={!isMobile} />
           <div className="flex md:hidden">  
-            <button onClick={toggleMenu} className="text-white text-3xl">
+            <button onClick={toggleMenu} className="text-black text-3xl">
               <FontAwesomeIcon icon={isOpen ? faTimes : faBars} className="w-6" />
             </button>
           </div>
