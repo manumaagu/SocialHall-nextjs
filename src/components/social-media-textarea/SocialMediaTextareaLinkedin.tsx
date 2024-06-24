@@ -70,14 +70,15 @@ const SocialMediaTextareaLinkedin: React.FC<
         preview: URL.createObjectURL(file),
       })
     );
-    setFiles((prevFiles) => [...prevFiles, ...updatedFiles]);
+    const newFiles = [...files, ...updatedFiles];
+    setFiles(newFiles);
     onContentChange({
       shareCommentary: shareCommentary,
       shareMediaCategory:
         updatedFiles.length > 0
           ? shareMediaCategory.IMAGE
           : shareMediaCategory.NONE,
-      media: updatedFiles,
+      media: newFiles,
     });
   };
 

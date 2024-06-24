@@ -123,7 +123,7 @@ export default async function handler(req: MulterAuthRequest, res: NextApiRespon
         return res.status(400).json({ error: "Clerk user id missing" });
     }
 
-    if(!verifyUser(userId)) {
+    if (!verifyUser(userId)) {
         return res.status(401).json({ error: "Unauthorized" });
     }
 
@@ -137,87 +137,82 @@ export default async function handler(req: MulterAuthRequest, res: NextApiRespon
 
     const accessToken = media.tokenAccess;
 
-    let assets = [];
+    let assets: any[] = [];
 
     const form = new formidable.IncomingForm({ multiples: true });
 
     form.parse(req, async (err, fields: Fields, files: Files) => {
-        console.log(files);
         if (err) {
             return res.status(500).json({ error: "Error parsing form data" });
         }
 
-        if(!files) {
+        if (!files) {
             return res.status(400).json({ error: "No files provided" });
         }
 
-        // for (const file of files) {
-            
-        // }
+        const filesArray = Object.values(files);
+
+        for (const file of filesArray) {
+            const fileObject = file![0];
+            const body = {
+                "registerUploadRequest": {
+                    "owner": "urn:li:person:" + media.profile_id,
+                    "recipes": [
+                        "urn:li:digitalmediaRecipe:feedshare-" + fileObject.mimetype!.split('/')[0]
+                    ],
+                    "serviceRelationships": [
+                        {
+                            "relationshipType": "OWNER",
+                            "identifier": "urn:li:userGeneratedContent"
+                        }
+                    ]
+                }
+            }
+
+            const response = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'X-Restli-Protocol-Version': '2.0.0',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Linkedin media upload error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            assets.push(data.value.asset);
+            const uploadUrl = data.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
+
+            const fileOpen = fs.readFileSync(fileObject.filepath);
+
+            const uploadResponse = await fetch(uploadUrl, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'X-Restli-Protocol-Version': '2.0.0',
+                    'Content-Type': 'application/binary'
+                },
+                body: fileOpen
+            });
+
+            if (!uploadResponse.ok) {
+                throw new Error(`Linkedin media upload error: ${uploadResponse.statusText}`);
+            }
+
+            fs.unlink(fileObject.filepath, (err) => {
+                if (err) {
+                    console.error("Error deleting file: ", err);
+                }
+            });
+        }
+
+        console.log("[DEBUG] Linkedin media uploaded successfully");
+
+        res.status(200).json({ message: "Media uploaded", assets: assets });
     });
-    
-
-    // for (const file of files!) {
-
-    //     const body = {
-    //         "registerUploadRequest": {
-    //             "owner": "urn:li:person:" + linkedinMedia[0].profile_id,
-    //             "recipes": [
-    //                 "urn:li:digitalmediaRecipe:feedshare-" + file.mimetype.split('/')[0]
-    //             ],
-    //             "serviceRelationships": [
-    //                 {
-    //                     "relationshipType": "OWNER",
-    //                     "identifier": "urn:li:userGeneratedContent"
-    //                 }
-    //             ]
-    //         }
-    //     }
-
-    //     const response = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
-    //         method: 'POST',
-    //         headers: {
-    //             Authorization: `Bearer ${accessToken}`,
-    //             'X-Restli-Protocol-Version': '2.0.0',
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(body)
-    //     });
-
-    //     if (!response.ok) {
-    //         throw new Error(`Linkedin media upload error: ${response.statusText}`);
-    //     }
-
-    //     const data = await response.json();
-    //     assets.push(data.value.asset);
-    //     const uploadUrl = data.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
-
-    //     const fileOpen = fs.readFileSync(file.path);
-
-    //     const uploadResponse = await fetch(uploadUrl, {
-    //         method: 'POST',
-    //         headers: {
-    //             Authorization: `Bearer ${accessToken}`,
-    //             'X-Restli-Protocol-Version': '2.0.0',
-    //             'Content-Type': 'application/binary'
-    //         },
-    //         body: fileOpen
-    //     });
-
-    //     if (!uploadResponse.ok) {
-    //         throw new Error(`Linkedin media upload error: ${uploadResponse.statusText}`);
-    //     }
-
-
-    //     fs.unlink(file.path, (err) => {
-    //         if (err) {
-    //             console.error("Error deleting file: ", err);
-    //         }
-    //     });
-    // }
-
-    console.log("[DEBUG] Linkedin media uploaded successfully");
-
-    return 1234;
-
 }

@@ -45,8 +45,6 @@ const PlannerPage = () => {
     const dateTime = `${postDate} ${time}`;
     const dateTimestamp = new Date(dateTime).getTime();
 
-    console.log(contents);
-
     Object.entries(contents).forEach(async ([network, content]) => {
       const mediaToUpload = new FormData();
       const contentToSend = new FormData();
@@ -72,7 +70,6 @@ const PlannerPage = () => {
           if (linkedinContent.media?.length ?? 0 > 0) {
             linkedinContent.media?.forEach((media, index) => {
               if (media instanceof File) {
-                console.log(media);
                 mediaToUpload.append(`media[${index}]`, media);
               }
             });
@@ -107,22 +104,26 @@ const PlannerPage = () => {
 
         const assets = data.assets;
 
-        let mediaArray: { status: string; media: string }[] = [];
+        console.log(assets);
 
-        assets.forEach((media: any) => {
-          const mediaObj = {
-            status: "READY",
-            media: media,
-          };
-          mediaArray.push(mediaObj);
-        });
+        // let mediaArray: { status: string; media: string }[] = [];
 
-        console.log(mediaArray);
+        // assets.forEach((media: any) => {
+        //   const mediaObj = {
+        //     status: "READY",
+        //     media: media,
+        //   };
+        //   mediaArray.push(mediaObj);
+        // });
 
-        mediaArray.forEach((obj, index) => {
-          contentToSend.append(`media[${index}][status]`, obj.status);
-          contentToSend.append(`media[${index}][media]`, obj.media);
-        });
+        // console.log(mediaArray);
+
+        // mediaArray.forEach((obj, index) => {
+        //   contentToSend.append(`media[${index}][status]`, obj.status);
+        //   contentToSend.append(`media[${index}][media]`, obj.media);
+        // });
+
+        contentToSend.append("assets", JSON.stringify(assets));
       }
 
       try {

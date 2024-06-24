@@ -106,8 +106,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         process.env.CLIENT_URL as string + process.env.GOOGLE_CALLBACK_URL as string
     );
 
-    console.log(code);
-
     const { tokens } = await oauth2Client.getToken(code!.toString());
     oauth2Client.setCredentials(tokens);
 

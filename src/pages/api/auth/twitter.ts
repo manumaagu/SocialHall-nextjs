@@ -64,8 +64,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { userId } = getAuth(req);
 
-    console.log(userId);
-
     if (!userId) {
         return res.status(400).json({ error: "Clerk user id missing" });
     }

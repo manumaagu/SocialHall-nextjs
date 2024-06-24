@@ -5,6 +5,16 @@ import { InsertPendingLinkedin, pendingLinkedinTable, linkedinMediaTable } from 
 import { db } from '@/db/db';
 import { randomBytes } from 'crypto';
 import { verifyUser } from '@/utils/users';
+import * as formidable from 'formidable';
+import { Fields } from 'formidable';
+import { ShareMedia, shareMediaCategory } from '@/interfaces/social-media';
+import { createEvent } from '@/utils/event';
+
+export const config = {
+    api: {
+        bodyParser: false,
+    }
+};
 
 /**
  * @swagger
@@ -101,18 +111,50 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(404).json({ error: "Linkedin account not found" });
     }
 
-    const contentToSend = req.body;
-    const postingDate = contentToSend.date;
+    const form = new formidable.IncomingForm({ multiples: true });
 
-    const pendingLinkedin: InsertPendingLinkedin = {
-        id: randomBytes(16).toString('hex'),
-        clerkId: userId,
-        postingDate: postingDate,
-        content: contentToSend,
-    };
+    form.parse(req, async (err, fields: Fields) => {
+        console.log(fields);
+        if (err) {
+            return res.status(500).json({ error: "Error parsing form data" });
+        }
 
-    await db.insert(pendingLinkedinTable).values(pendingLinkedin);
+        const postingDate: number = fields.date ? Number(fields.date[0]) : 0;
 
-    res.status(200).json({ message: "Linkedin posts added to pending queue" });
+        const assets = JSON.parse(fields.assets![0]) ? JSON.parse(fields.assets![0]) : [];
 
+        const shareCommentary: string = fields.shareCommentary ? fields.shareCommentary[0] : "";
+        const shareMediaCategory = fields.shareMediaCategory ? fields.shareMediaCategory[0] : "";
+        let media: { status: string; media: string; }[] = [];
+        
+        console.log(assets);
+
+        assets.forEach((asset: string) => {
+            media.push({
+                "status": "READY",
+                "media": asset,
+            });
+        });
+
+        console.log(media);
+
+        let contentToSend = {
+            shareCommentary: shareCommentary,
+            shareMediaCategory: shareMediaCategory,
+            media: media,
+        }
+
+        const pendingLinkedin: InsertPendingLinkedin = {
+            id: randomBytes(16).toString('hex'),
+            clerkId: userId,
+            postingDate: postingDate,
+            content: JSON.stringify(contentToSend),
+        };
+
+        await db.insert(pendingLinkedinTable).values(pendingLinkedin);
+
+        await createEvent(userId, 'linkedin', pendingLinkedin.id, postingDate, shareCommentary ? shareCommentary : "LinkedIn post, just media");
+
+        res.status(200).json({ message: "Linkedin post added to pending queue" });
+    });
 }
