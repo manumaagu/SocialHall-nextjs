@@ -53,7 +53,6 @@ import { verifyUser } from '@/utils/users';
  *                   type: string
  *                   example: "Method not allowed"
  */
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     if (req.method !== "GET") {
@@ -73,10 +72,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const oauth2Client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET,
-        process.env.CLIENT_URL as string + process.env.GOOGLE_CALLBACK_URL
+        process.env.CLIENT_URL as string + process.env.GOOGLE_CALLBACK_URL as string
     );
 
-    const scope = [
+    const scopes = [
         'https://www.googleapis.com/auth/youtube',
         'https://www.googleapis.com/auth/youtube.channel-memberships.creator',
         'https://www.googleapis.com/auth/youtube.force-ssl',
@@ -87,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const url = oauth2Client.generateAuthUrl({
         access_type: 'offline',
-        scope: scope,
+        scope: scopes,
     });
 
     return res.json({ url: url });

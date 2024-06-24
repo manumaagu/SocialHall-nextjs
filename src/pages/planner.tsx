@@ -42,9 +42,10 @@ const PlannerPage = () => {
   }, []);
 
   const saveContent = useCallback(async () => {
-
     const dateTime = `${postDate} ${time}`;
     const dateTimestamp = new Date(dateTime).getTime();
+
+    console.log(contents);
 
     Object.entries(contents).forEach(async ([network, content]) => {
       const mediaToUpload = new FormData();
@@ -71,6 +72,7 @@ const PlannerPage = () => {
           if (linkedinContent.media?.length ?? 0 > 0) {
             linkedinContent.media?.forEach((media, index) => {
               if (media instanceof File) {
+                console.log(media);
                 mediaToUpload.append(`media[${index}]`, media);
               }
             });
@@ -88,8 +90,9 @@ const PlannerPage = () => {
       }
 
       if (mediaToUpload.has("media[0]")) {
+
         const response = await fetch(
-          `http://localhost:3000/api/upload/${network}`,
+          `http://localhost:3000/api/upload-media/${network}`,
           {
             method: "POST",
             body: mediaToUpload,
@@ -123,10 +126,13 @@ const PlannerPage = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:3000/api/posts/post/${network}`, {
-          method: "POST",
-          body: contentToSend,
-        });
+        const response = await fetch(
+          `http://localhost:3000/api/posts/post/${network}`,
+          {
+            method: "POST",
+            body: contentToSend,
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -202,36 +208,33 @@ const PlannerPage = () => {
     return `${hours}:${minutes}`;
   };
 
-  const handleEventClick = useCallback(
-    async (clickInfo: EventClickArg) => {
-      const { event } = clickInfo;
+  const handleEventClick = useCallback(async (clickInfo: EventClickArg) => {
+    const { event } = clickInfo;
 
-      if (!event.extendedProps.posted) {
-        if (
-          window.confirm(
-            `Are you sure you want to delete the event '${event.title}'`
-          )
-        ) {
-          const response = await fetch(
-            `http://localhost:3000/api/events/delete/${event.id}`,
-            {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
+    if (!event.extendedProps.posted) {
+      if (
+        window.confirm(
+          `Are you sure you want to delete the event '${event.title}'`
+        )
+      ) {
+        const response = await fetch(
+          `http://localhost:3000/api/events/delete/${event.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
+        );
 
-          event.remove();
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
+
+        event.remove();
       }
-    },
-    []
-  );
+    }
+  }, []);
 
   const renderEventContent = useCallback((eventInfo: EventInfo) => {
     return (
@@ -277,12 +280,15 @@ const PlannerPage = () => {
 
   const getMedias = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/connected-profiles", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/auth/connected-profiles",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");

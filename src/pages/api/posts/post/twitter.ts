@@ -131,10 +131,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(500).json({ error: "Error parsing form data" });
         }
 
-        console.log(fields);
-
         const postingDate: number = fields.date ? Number(fields.date[0]) : 0;
-
 
         let tweets: SendTweetV2Params[] = [];
 

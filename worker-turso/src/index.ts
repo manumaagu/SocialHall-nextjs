@@ -12,7 +12,7 @@ export interface Env {
 
 
 export default {
-  async fetch(req, env: any, ctx): Promise<Response> {
+  async fetch(req: any, env: any): Promise<Response> {
 
     const client = buildLibsqlClient(env);
 
@@ -36,7 +36,7 @@ export default {
     });
 
   },
-} satisfies ExportedHandler;
+};
 
 // async function checkAndPostTweets(db: LibSQLDatabase<Record<string, never>>) {
 //   console.log("[CRONJOB] - Checking for pending twitter posts");

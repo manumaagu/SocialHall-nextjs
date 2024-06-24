@@ -35,19 +35,16 @@ const ConnectSocialMedias: React.FC = () => {
   const [error, setError] = useState(null);
   const [linkedinTokenExpired, setLinkedinTokenExpired] = useState(false);
 
-  const clientUrl = 'http://localhost:3000';  // Update this with your client URL
+  const clientUrl = "http://localhost:3000"; // Update this with your client URL
 
   const fetchData = async () => {
     try {
-      const response = await fetch(
-        `${clientUrl}/api/auth/connected-profiles`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${clientUrl}/api/auth/connected-profiles`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -56,10 +53,10 @@ const ConnectSocialMedias: React.FC = () => {
       const data = await response.json();
       setData(data);
       Object.keys(data.profiles).forEach((key) => {
-        if (key !== "linkedin") return;
-        if (data.profiles[key].date >= Date.now())
+        if (key.toLocaleLowerCase() !== "linkedin") return;
+        if (data.profiles[key].date >= Date.now()) {
           setLinkedinTokenExpired(false);
-        else setLinkedinTokenExpired(true);
+        } else setLinkedinTokenExpired(true);
       });
     } catch (err) {
       console.error(err);

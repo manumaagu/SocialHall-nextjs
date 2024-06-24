@@ -148,7 +148,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (linkedinMedia && linkedinMedia.length > 0) {
         profiles.linkedin = {
             username: linkedinMedia[0].profile_username,
-            date: linkedinMedia[0].date,
+            date: linkedinMedia[0].tokenExpiration?.toString() ?? null,
             picture: linkedinMedia[0].profile_picture,
         }
     }

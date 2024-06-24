@@ -103,8 +103,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const oauth2Client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET,
-        process.env.CLIENT_URI as string + process.env.GOOGLE_CALLBACK_URL
+        process.env.CLIENT_URL as string + process.env.GOOGLE_CALLBACK_URL as string
     );
+
+    console.log(code);
 
     const { tokens } = await oauth2Client.getToken(code!.toString());
     oauth2Client.setCredentials(tokens);

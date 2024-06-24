@@ -68,45 +68,43 @@ const Modal: React.FC<ModalProps> = ({
     setSelectedNetwork(network);
   };
 
-  function checkConditions(): boolean {
-    console.log(content);
-    let disabled = true;
-    if (content.twitter) {
-      if (Array.isArray(content.twitter)) {
-        if (content.twitter.length === 0) {
+  // function checkConditions(): boolean {
+  //   let disabled = true;
+  //   if (content.twitter) {
+  //     if (Array.isArray(content.twitter)) {
+  //       if (content.twitter.length === 0) {
           
-          return true;
-        }
+  //         return true;
+  //       }
 
-        const twitterContentArray = content.twitter[0] as TwitterContent;
-        if (twitterContentArray.text) {
-          disabled = false;
-        }
-      } else {
-        const twitterContent = content.twitter as TwitterContent;
+  //       const twitterContentArray = content.twitter[0] as TwitterContent;
+  //       if (twitterContentArray.text) {
+  //         disabled = false;
+  //       }
+  //     } else {
+  //       const twitterContent = content.twitter as TwitterContent;
 
-        if (twitterContent.text) {
-          disabled = false;
-        }
-      }
+  //       if (twitterContent.text) {
+  //         disabled = false;
+  //       }
+  //     }
 
-      if (content.youtube && !disabled) {
-        const youtubeContent = content.youtube as YoutubeContent;
-        console.log(youtubeContent.media);
-        if (
-          youtubeContent.media === null ||
-          youtubeContent.media.name === "empty"
-        ) {
-          disabled = true;
-        }
-      }
-    }
-    console.log(disabled);
-    return disabled;
-  }
+  //     if (content.youtube && !disabled) {
+  //       const youtubeContent = content.youtube as YoutubeContent;
+  //       console.log(youtubeContent.media);
+  //       if (
+  //         youtubeContent.media === null ||
+  //         youtubeContent.media.name === "empty"
+  //       ) {
+  //         disabled = true;
+  //       }
+  //     }
+  //   }
+  //   return disabled;
+  // }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-scroll">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-scroll text-black">
       <div
         className="bg-black bg-opacity-50 absolute inset-0"
         onClick={onClose}
@@ -153,10 +151,10 @@ const Modal: React.FC<ModalProps> = ({
           </button>
           <button
             onClick={onSave}
-            className={`bg-blue-500 hover:bg-blue-600 font-bold py-2 px-4 rounded text-white ${
-              checkConditions() ? " bg-custom-blue-disabled" : "bg-custom-blue"
-            }`}
-            disabled={checkConditions()}
+            className={`bg-blue-500 hover:bg-blue-600 font-bold py-2 px-4 rounded text-white 
+              
+            `}
+            // disabled={checkConditions()}
           >
             Save post
           </button>
