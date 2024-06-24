@@ -5,8 +5,77 @@ import { twitterMediaTable } from '@/db/schemes';
 import { db } from '@/db/db';
 import { verifyUser } from '@/utils/users';
 
-
+/**
+ * @swagger
+ * api/posts/list/twitter:
+ *   get:
+ *     summary: Get Twitter media posts
+ *     description: Retrieves Twitter media posts for the authenticated user.
+ *     tags:
+ *       - Posts
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved Twitter media posts.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   text:
+ *                     type: string
+ *                   created_at:
+ *                     type: string
+ *                     format: date-time
+ *       400:
+ *         description: Missing Clerk user ID or bad request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user id missing"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       404:
+ *         description: Twitter media not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Twitter media not found"
+ *       405:
+ *         description: Method not allowed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed"
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
+    if (req.method !== "GET") {
+        return res.status(405).json({ error: "Method not allowed" });
+    }
 
     const { userId } = getAuth(req);
 
@@ -21,7 +90,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const twitterMedia = await db.select().from(twitterMediaTable).where(eq(twitterMediaTable.clerkId, userId));
 
     if (twitterMedia.length === 0) {
-        return res.status(404).json({ error: "Linkedin account not found" });
+        return res.status(404).json({ error: "Twitter account not found" });
     }
 
     const media = twitterMedia[0];

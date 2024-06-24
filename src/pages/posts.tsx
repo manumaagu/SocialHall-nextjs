@@ -111,6 +111,8 @@ const PostPage = () => {
         }
       );
 
+      console.log(response);
+
       if (response.status === 404) {
         setPosts([]);
         setLoading(false);

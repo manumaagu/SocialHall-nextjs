@@ -5,7 +5,96 @@ import { linkedinMediaTable } from '@/db/schemes';
 import { db } from '@/db/db';
 import { verifyUser } from '@/utils/users';
 
-
+/**
+ * @swagger
+ * api/analytics/linkedin:
+ *   get:
+ *     summary: Get LinkedIn statistics of a user
+ *     description: Returns the posts and followers of the LinkedIn account associated with the authenticated user.
+ *     tags:
+ *     - Analytics
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved LinkedIn media.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   posts:
+ *                     type: array
+ *                     description: List of LinkedIn posts.
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                           example: "post123"
+ *                         content:
+ *                           type: string
+ *                           example: "This is a LinkedIn post content."
+ *                         date: 
+ *                           type: number
+ *                           example: 1723456789
+ *                         statistics:
+ *                           type: array
+ *                           description: List of LinkedIn post statistics.
+ *                           example: [{"date": 1723456789, "impressions": 5, "comments": 2, "likes": 3}]
+ *                   followers:
+ *                     type: array
+ *                     description: List of LinkedIn followers.
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         date:
+ *                           type: number
+ *                           example: 1723456789
+ *                         count:
+ *                           type: number
+ *                           example: 123
+ *       400:
+ *         description: Missing Clerk user ID.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user ID missing"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       404:
+ *         description: LinkedIn account not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "LinkedIn account not found"
+ *       405:
+ *         description: Method not allowed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed"
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const { userId } = getAuth(req);

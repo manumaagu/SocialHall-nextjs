@@ -6,8 +6,84 @@ import { db } from '@/db/db';
 import { randomBytes } from 'crypto';
 import { verifyUser } from '@/utils/users';
 
-
+/**
+ * @swagger
+ * api/posts/post/linkedin:
+ *   post:
+ *     summary: Add LinkedIn posts to pending queue
+ *     description: Adds LinkedIn posts to the pending queue for the authenticated user.
+ *     tags:
+ *       - Posts
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               date:
+ *                 type: string
+ *                 example: "2023-01-01T00:00:00Z"
+ *               content:
+ *                 type: object
+ *                 example: { "text": "This is a LinkedIn post content" }
+ *     responses:
+ *       200:
+ *         description: Successfully added LinkedIn posts to pending queue.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "LinkedIn posts added to pending queue"
+ *       400:
+ *         description: Missing Clerk user ID or bad request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user ID missing"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       404:
+ *         description: LinkedIn account not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "LinkedIn account not found"
+ *       405:
+ *         description: Method not allowed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed"
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
+    if (req.method !== "POST") {
+        return res.status(405).json({ error: "Method not allowed" });
+    }
 
     const { userId } = getAuth(req);
 

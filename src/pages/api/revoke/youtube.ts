@@ -6,8 +6,71 @@ import { youtubeMediaTable } from '@/db/schemes';
 import { db } from '@/db/db';
 import { verifyUser } from '@/utils/users';
 
-
+/**
+ * @swagger
+ * api/revoke/youtube:
+ *   post:
+ *     summary: Revoke Youtube account for a user
+ *     description: Deletes the Youtube account associated with the authenticated user.
+ *     tags:
+ *       - Revoke
+ *     responses:
+ *       200:
+ *         description: Successfully revoked the Youtube account.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Account revoked"
+ *       400:
+ *         description: Missing Clerk user ID.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user ID missing"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       404:
+ *         description: Youtube account not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Youtube account not found"
+ *       405:
+ *         description: Method not allowed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed"
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
+    if (req.method !== "POST") {
+        return res.status(405).json({ error: "Method not allowed" });
+    }
 
     const { userId } = getAuth(req);
 

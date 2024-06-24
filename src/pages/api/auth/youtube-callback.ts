@@ -1,4 +1,3 @@
-// pages/api/linkedin/callback.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { randomBytes } from 'crypto';
 import { InsertYoutubeMedia, youtubeMediaTable } from '@/db/schemes';
@@ -7,7 +6,82 @@ import { getAuth } from '@clerk/nextjs/server';
 import { google } from 'googleapis';
 import { verifyUser } from '@/utils/users';
 
-
+/**
+ * @swagger
+ * api/auth/youtube-callback:
+ *   get:
+ *     summary: Google OAuth Callback
+ *     description: Handles the Google OAuth callback, exchanges the authorization code for an access token, and updates the user's YouTube media information.
+ *     tags:
+ *       - Auth
+ *     parameters:
+ *       - in: query
+ *         name: code
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The authorization code returned by Google.
+ *       - in: query
+ *         name: error
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The error returned by Google, if any.
+ *     responses:
+ *       200:
+ *         description: Successfully handled Google OAuth callback.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Successfully handled Google OAuth callback"
+ *       400:
+ *         description: Missing Clerk user ID, code, or bad request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user id missing"
+ *                 message:
+ *                   type: string
+ *                   example: "No channel found!"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       403:
+ *         description: Invalid verifier or access tokens.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid verifier or access tokens!"
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { userId } = getAuth(req);
 
@@ -74,7 +148,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             profile_username: username,
             profile_url: url,
             profile_picture: picture,
-            subscribers: JSON.stringify(subscriberArray),
+            profile_followers: JSON.stringify(subscriberArray),
         };
 
         await db.insert(youtubeMediaTable).values(youtubeMedia);

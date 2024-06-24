@@ -35,10 +35,12 @@ const ConnectSocialMedias: React.FC = () => {
   const [error, setError] = useState(null);
   const [linkedinTokenExpired, setLinkedinTokenExpired] = useState(false);
 
+  const clientUrl = 'http://localhost:3000';  // Update this with your client URL
+
   const fetchData = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/auth/connected-profiles",
+        `${clientUrl}/api/auth/connected-profiles`,
         {
           method: "GET",
           headers: {
@@ -81,10 +83,10 @@ const ConnectSocialMedias: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center h-100% w-full">
+      {/* <div className="flex justify-center items-center h-100% w-full">
         <img src="/images/image.png"></img>
-      </div>
-      {/* {!loading && (
+      </div> */}
+      {!loading && (
         <>
           <h1 className="text-6xl text-center mt-10">
             Conecta tus redes sociales
@@ -101,7 +103,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Twitter"
                   icon={faXTwitter}
-                  authUrl="http://localhost:3000/api/auth/twitter"
+                  authUrl={`${clientUrl}/api/auth/twitter`}
                 />
               )}
 
@@ -115,7 +117,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Facebook"
                   icon={faFacebookSquare}
-                  authUrl="http://localhost:3000/api/auth/facebook"
+                  authUrl={`${clientUrl}/api/auth/facebook`}
                 />
               )}
 
@@ -129,7 +131,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Tiktok"
                   icon={faTiktok}
-                  authUrl="http://localhost:3000/api/auth/tiktok"
+                  authUrl={`${clientUrl}/api/auth/tiktok`}
                 />
               )}
 
@@ -143,7 +145,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Youtube"
                   icon={faYoutube}
-                  authUrl="http://localhost:3000/api/auth/youtube"
+                  authUrl={`${clientUrl}/api/auth/youtube`}
                 />
               )}
 
@@ -157,7 +159,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Instagram"
                   icon={faInstagram}
-                  authUrl="http://localhost:3000/api/auth/instagram"
+                  authUrl={`${clientUrl}/api/auth/instagram`}
                 />
               )}
 
@@ -172,13 +174,13 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Linkedin"
                   icon={faLinkedin}
-                  authUrl="http://localhost:3000/api/auth/linkedin"
+                  authUrl={`${clientUrl}/api/auth/linkedin`}
                 />
               )}
             </div>
           </div>
         </>
-      )} */}
+      )}
     </>
   );
 };

@@ -5,8 +5,78 @@ import { eventTable, pendingLinkedinTable, pendingTweetsTable, pendingYoutubeTab
 import { db } from '@/db/db';
 import { verifyUser } from '@/utils/users';
 
-
+/**
+ * @swagger
+ * api/events/delete/{id}:
+ *   delete:
+ *     summary: Delete an event
+ *     description: Deletes an event associated with the authenticated user.
+ *     tags:
+ *       - Events
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the event to delete
+ *     responses:
+ *       200:
+ *         description: Successfully deleted the event.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Event deleted"
+ *       400:
+ *         description: Missing Clerk user ID.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user ID missing"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       404:
+ *         description: Event not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Event not found"
+ *       405:
+ *         description: Method not allowed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed"
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
+    if (req.method !== "DELETE") {
+        return res.status(405).json({ error: "Method not allowed" });
+    }
 
     const { userId } = getAuth(req);
 

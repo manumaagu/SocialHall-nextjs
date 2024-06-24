@@ -60,7 +60,7 @@ const Header: React.FC = () => {
             <a
               className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis text-black ${
                 router.pathname === "/planner"
-                  ? "active"
+                  ? "bg-custom-purple-dark text-black"
                   : "hover:bg-custom-purple-dark-hover hover:text-black justify-center"
               }`}
             >
@@ -74,7 +74,7 @@ const Header: React.FC = () => {
             <a
               className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis ${
                 router.pathname === "/posts"
-                  ? "active"
+                  ? "bg-custom-purple-dark text-black"
                   : "hover:bg-custom-purple-dark-hover hover:text-black text-black"
               }`}
             >
@@ -88,7 +88,7 @@ const Header: React.FC = () => {
             <a
               className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis text-black ${
                 router.pathname === "/connect-social-medias"
-                  ? "active"
+                  ? "bg-custom-purple-dark text-black"
                   : "hover:bg-custom-purple-dark-hover hover:text-black"
               }`}
             >

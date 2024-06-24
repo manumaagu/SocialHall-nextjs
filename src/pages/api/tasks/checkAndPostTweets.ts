@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const media = twitterMedia[0];
         const content = tweet.content ? JSON.parse(tweet.content) : [];
-        const posts = media.posts ? JSON.parse(media.posts) : [];
+        const posts = JSON.parse(media.posts!) ?? [];
 
         let tokenAccess = media.tokenAccess;
         let tokenRefresh = media.tokenRefresh;
@@ -86,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         console.log(posts);
 
-        await db.update(twitterMediaTable).set({ posts: JSON.stringify(posts) }).where(eq(twitterMediaTable.id, tweet.clerkId));
+        await db.update(twitterMediaTable).set({ posts: JSON.stringify(posts) }).where(eq(twitterMediaTable.clerkId, tweet.clerkId));
 
         await db.delete(pendingTweetsTable).where(eq(pendingTweetsTable.id, pendingId));
     }

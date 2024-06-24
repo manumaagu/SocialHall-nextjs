@@ -35,7 +35,85 @@ export const config = {
     },
 };
 
+/**
+ * @swagger
+ * api/upload-media/linkedin:
+ *   post:
+ *     summary: Upload media to LinkedIn for a user
+ *     description: Uploads media files to LinkedIn associated with the authenticated user.
+ *     tags:
+ *       - Upload Media
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               files:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       200:
+ *         description: Successfully uploaded LinkedIn media.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: "urn:li:digitalmediaAsset:C4D00AAAAbBCDEFG"
+ *       400:
+ *         description: Missing Clerk user ID or no files provided.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user ID missing"
+ *                 message:
+ *                   type: string
+ *                   example: "No files provided"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       404:
+ *         description: LinkedIn account not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "LinkedIn account not found"
+ *       405:
+ *         description: Method not allowed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed"
+ */
 export default async function handler(req: MulterAuthRequest, res: NextApiResponse) {
+
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: "Method not allowed" });
+    }
 
     const { userId } = getAuth(req);
 

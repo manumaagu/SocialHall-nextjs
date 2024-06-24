@@ -6,7 +6,79 @@ import { db } from '@/db/db';
 import { verifyUser } from '@/utils/users';
 
 
+/**
+ * @swagger
+ * api/posts/list/linkedin:
+ *   get:
+ *     summary: Get LinkedIn media posts
+ *     description: Retrieves LinkedIn media posts for the authenticated user.
+ *     tags:
+ *       - Posts
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved LinkedIn media posts.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   title:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   url:
+ *                     type: string
+ *       400:
+ *         description: Missing Clerk user ID or bad request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user id missing"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       404:
+ *         description: LinkedIn media not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "LinkedIn media not found"
+ *       405:
+ *         description: Method not allowed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed"
+ */
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
+    if (req.method !== "GET") {
+        return res.status(405).json({ error: "Method not allowed" });
+    }
 
     const { userId } = getAuth(req);
 

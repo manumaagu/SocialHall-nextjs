@@ -6,6 +6,69 @@ import { getAuth } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 import { verifyUser } from '@/utils/users';
 
+/**
+ * @swagger
+ * api/auth/linkedin-callback:
+ *   get:
+ *     summary: LinkedIn OAuth Callback
+ *     description: Handles the LinkedIn OAuth callback, exchanges the authorization code for an access token, and updates the user's LinkedIn media information.
+ *     tags:
+ *       - Auth
+ *     parameters:
+ *       - in: query
+ *         name: code
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The authorization code returned by LinkedIn.
+ *       - in: query
+ *         name: error
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The error returned by LinkedIn, if any.
+ *     responses:
+ *       200:
+ *         description: Successfully handled LinkedIn OAuth callback.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Successfully handled LinkedIn OAuth callback"
+ *       400:
+ *         description: Missing Clerk user ID or bad request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user id missing"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const { userId } = getAuth(req);

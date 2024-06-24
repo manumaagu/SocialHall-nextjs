@@ -183,7 +183,7 @@ const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
           </p>
         )}
       </div>
-      <div className="flex p-4 h-26 items-center text-xl border-2 rounded border-black-light border-opacity-70 text-center justify-between bg-gray-light">
+      <div className="flex p-4 h-26 items-center text-xl border-2 rounded border-black-light border-opacity-70 text-center justify-between bg-gray-light text-black">
         <div className="flex items-center flex-grow">
           <img
             className="rounded-full mr-4 max-h-12"
