@@ -42,7 +42,6 @@ const PlannerPage = () => {
   }, []);
 
   const saveContent = useCallback(async () => {
-
     const dateTime = `${postDate} ${time}`;
     const dateTimestamp = new Date(dateTime).getTime();
 
@@ -88,8 +87,9 @@ const PlannerPage = () => {
       }
 
       if (mediaToUpload.has("media[0]")) {
+
         const response = await fetch(
-          `http://localhost:3000/api/upload/${network}`,
+          `http://localhost:3000/api/upload-media/${network}`,
           {
             method: "POST",
             body: mediaToUpload,
@@ -104,29 +104,36 @@ const PlannerPage = () => {
 
         const assets = data.assets;
 
-        let mediaArray: { status: string; media: string }[] = [];
+        console.log(assets);
 
-        assets.forEach((media: any) => {
-          const mediaObj = {
-            status: "READY",
-            media: media,
-          };
-          mediaArray.push(mediaObj);
-        });
+        // let mediaArray: { status: string; media: string }[] = [];
 
-        console.log(mediaArray);
+        // assets.forEach((media: any) => {
+        //   const mediaObj = {
+        //     status: "READY",
+        //     media: media,
+        //   };
+        //   mediaArray.push(mediaObj);
+        // });
 
-        mediaArray.forEach((obj, index) => {
-          contentToSend.append(`media[${index}][status]`, obj.status);
-          contentToSend.append(`media[${index}][media]`, obj.media);
-        });
+        // console.log(mediaArray);
+
+        // mediaArray.forEach((obj, index) => {
+        //   contentToSend.append(`media[${index}][status]`, obj.status);
+        //   contentToSend.append(`media[${index}][media]`, obj.media);
+        // });
+
+        contentToSend.append("assets", JSON.stringify(assets));
       }
 
       try {
-        const response = await fetch(`http://localhost:3000/api/posts/post/${network}`, {
-          method: "POST",
-          body: contentToSend,
-        });
+        const response = await fetch(
+          `http://localhost:3000/api/posts/post/${network}`,
+          {
+            method: "POST",
+            body: contentToSend,
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -202,36 +209,33 @@ const PlannerPage = () => {
     return `${hours}:${minutes}`;
   };
 
-  const handleEventClick = useCallback(
-    async (clickInfo: EventClickArg) => {
-      const { event } = clickInfo;
+  const handleEventClick = useCallback(async (clickInfo: EventClickArg) => {
+    const { event } = clickInfo;
 
-      if (!event.extendedProps.posted) {
-        if (
-          window.confirm(
-            `Are you sure you want to delete the event '${event.title}'`
-          )
-        ) {
-          const response = await fetch(
-            `http://localhost:3000/api/events/delete/${event.id}`,
-            {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
+    if (!event.extendedProps.posted) {
+      if (
+        window.confirm(
+          `Are you sure you want to delete the event '${event.title}'`
+        )
+      ) {
+        const response = await fetch(
+          `http://localhost:3000/api/events/delete/${event.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
+        );
 
-          event.remove();
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
+
+        event.remove();
       }
-    },
-    []
-  );
+    }
+  }, []);
 
   const renderEventContent = useCallback((eventInfo: EventInfo) => {
     return (
@@ -277,12 +281,15 @@ const PlannerPage = () => {
 
   const getMedias = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/connected-profiles", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/auth/connected-profiles",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");

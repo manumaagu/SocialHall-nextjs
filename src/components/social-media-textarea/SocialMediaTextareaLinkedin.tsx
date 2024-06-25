@@ -23,15 +23,12 @@ const SocialMediaTextareaLinkedin: React.FC<
     const media = [] ;
 
     for (const file of value.media ?? []) {
-      console.log(file);
 
       media.push({
         ...file,
         preview: URL.createObjectURL(file),
       });
     }
-
-    console.log(media);
 
     return media as FileWithPreview[];
   };
@@ -73,14 +70,15 @@ const SocialMediaTextareaLinkedin: React.FC<
         preview: URL.createObjectURL(file),
       })
     );
-    setFiles((prevFiles) => [...prevFiles, ...updatedFiles]);
+    const newFiles = [...files, ...updatedFiles];
+    setFiles(newFiles);
     onContentChange({
       shareCommentary: shareCommentary,
       shareMediaCategory:
         updatedFiles.length > 0
           ? shareMediaCategory.IMAGE
           : shareMediaCategory.NONE,
-      media: updatedFiles,
+      media: newFiles,
     });
   };
 

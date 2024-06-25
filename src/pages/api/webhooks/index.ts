@@ -7,6 +7,95 @@ import { usersTable, InsertUser } from '@/db/schemes';
 import { randomBytes } from 'crypto';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * api/webhooks/index:
+ *   post:
+ *     summary: Handle Clerk webhooks
+ *     description: Processes webhooks from Clerk for user creation and deletion.
+ *     tags:
+ *       - Clerk Webhooks
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Webhook processed successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Webhook processed successfully"
+ *       201:
+ *         description: User created successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User created successfully"
+ *       400:
+ *         description: Bad request, including missing headers or verification failure.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Error occurred -- no Svix headers"
+ *       404:
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User does not exist"
+ *       405:
+ *         description: Method not allowed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Method Not Allowed"
+ *       409:
+ *         description: User already exists.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "User already exists"
+ *       500:
+ *         description: Internal server error, such as missing environment variables.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "WEBHOOK_SECRET is required in environment variables"
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
@@ -21,7 +110,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { "svix-id": svix_id, "svix-timestamp": svix_timestamp, "svix-signature": svix_signature } = req.headers;
 
     if (!svix_id || !svix_timestamp || !svix_signature) {
-        return res.status(400).json({ message: "Error occured -- no Svix headers" });
+        return res.status(400).json({ message: "Error occurred -- no Svix headers" });
     }
 
     const wh = new Webhook(WEBHOOK_SECRET);

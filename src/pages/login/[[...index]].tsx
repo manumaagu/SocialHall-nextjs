@@ -21,7 +21,6 @@ export default function Page() {
                 formFieldInput: "bg-custom-grey text-base border-none",
                 formButtonPrimary:
                   "bg-custom-purple-dark text-white text-lg border-none hover:bg-custom-purple-dark-hover ",
-
                 footerActionLink:
                   "text-custom-purple-dark hover:text-custom-purple-dark-hover",
               },

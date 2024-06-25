@@ -6,8 +6,84 @@ import { db } from '@/db/db';
 import { verifyUser } from '@/utils/users';
 import { TwitterApi } from 'twitter-api-v2';
 
-
+/**
+ * @swagger
+ * api/posts/delete/twitter/{id}:
+ *   delete:
+ *     summary: Delete Twitter media post
+ *     description: Deletes a specific Twitter media post for the authenticated user.
+ *     tags:
+ *       - Posts
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the tweet to delete.
+ *     responses:
+ *       200:
+ *         description: Successfully deleted Twitter media post.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Tweet deleted"
+ *       400:
+ *         description: Missing Clerk user ID, post ID, or bad request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user id missing"
+ *                 message:
+ *                   type: string
+ *                   example: "Post id missing"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       404:
+ *         description: Twitter media not found or tweet not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Twitter account not found"
+ *                 message:
+ *                   type: string
+ *                   example: "Tweet not found"
+ *       405:
+ *         description: Method not allowed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed"
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
+    if (req.method !== "DELETE") {
+        return res.status(405).json({ error: "Method not allowed" });
+    }
 
     const { userId } = getAuth(req);
 
@@ -55,9 +131,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log(`[TWITTER] Tweet ${postId} deleted`);
         const newTweets = tweets.filter((tweet: { id: string | string[]; }) => tweet.id !== postId);
         await db.update(twitterMediaTable).set({ posts: newTweets }).where(eq(twitterMediaTable.clerkId, userId));
-        res.status(200)
+        res.status(200).json({ message: "Tweet deleted" });
     } else {
-        res.status(400)
+        res.status(404).json({ message: "Tweet not found" });
     }
 
 }

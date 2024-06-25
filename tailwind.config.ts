@@ -4,7 +4,6 @@ const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/modals/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
@@ -15,15 +14,15 @@ const config: Config = {
       xl: '1440px',
     },
     colors: {
-      'custom-purple': '#CCB8CC',
-      'custom-purple-dark': '#5A4BAD',
-      'custom-purple-dark-hover': '#463893',
+      'custom-purple': '#C14FAA',
+      'custom-purple-dark': '#5BDED9',
+      'custom-purple-dark-hover': '#965BDE',
       'custom-grey': '#DADADA',
       'custom-grey-disabled': '#E9ECEF',
       'custom-blue': '#1DA1F2',
       'custom-blue-disabled': '#B3D7F9',
       'blue': '#1fb6ff',
-      'purple': '#7e5bef',
+      'purple': '#5BDED9',
       'pink': '#ff49db',
       'orange': '#ff7849',
       'green': '#13ce66',

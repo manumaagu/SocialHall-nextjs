@@ -1,4 +1,3 @@
-// pages/api/linkedin/callback.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { randomBytes } from 'crypto';
 import { InsertTwitterMedia, twitterMediaTable } from '@/db/schemes';
@@ -9,7 +8,88 @@ import { temporaryTokensTable } from '@/db/schemes';
 import { eq } from 'drizzle-orm';
 import { verifyUser } from '@/utils/users';
 
-
+/**
+ * @swagger
+ * api/auth/twitter-callback:
+ *   get:
+ *     summary: Twitter OAuth Callback
+ *     description: Handles the Twitter OAuth callback, exchanges the authorization code for an access token, and updates the user's Twitter media information.
+ *     tags:
+ *       - Auth
+ *     parameters:
+ *       - in: query
+ *         name: state
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The state parameter returned by Twitter.
+ *       - in: query
+ *         name: code
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The authorization code returned by Twitter.
+ *       - in: query
+ *         name: error
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The error returned by Twitter, if any.
+ *     responses:
+ *       200:
+ *         description: Successfully handled Twitter OAuth callback.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Successfully handled Twitter OAuth callback"
+ *       400:
+ *         description: Missing Clerk user ID, state, code, or bad request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user id missing"
+ *                 message:
+ *                   type: string
+ *                   example: "You denied the app or your session expired!"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       403:
+ *         description: Invalid verifier or access tokens.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid verifier or access tokens"
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { userId } = getAuth(req);
 
@@ -28,7 +108,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return;
     }
 
-    let temporaryTokens = await db.select().from(temporaryTokensTable).where(eq(temporaryTokensTable.id, userId));
+    let temporaryTokens = await db.select().from(temporaryTokensTable).where(eq(temporaryTokensTable.clerkId, userId));
 
     const codeVerifier = temporaryTokens[0].codeVerifier;
     const sessionState = temporaryTokens[0].state;
@@ -74,11 +154,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         await db.insert(twitterMediaTable).values(twitterMedia);
 
-        await db.delete(temporaryTokensTable).where(eq(temporaryTokensTable.id, userId));
+        await db.delete(temporaryTokensTable).where(eq(temporaryTokensTable.clerkId, userId));
 
         res.redirect(process.env.CLIENT_URL as string);
     } catch (error) {
         console.error('Error logging in with OAuth2:', error);
-        res.status(403).send('Invalid verifier or access tokens!');
+        res.status(403).send('Invalid verifier or access tokens');
     }
 }

@@ -7,8 +7,97 @@ import { verifyUser } from '@/utils/users';
 import { socialMediaColor } from '@/utils/event';
 import { timeToYear } from '@/utils/time';
 
-
+/**
+ * @swagger
+ * api/events/list:
+ *   get:
+ *     summary: Get events of a user
+ *     description: Returns the events associated with the authenticated user.
+ *     tags:
+ *       - Events
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved events.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "event123"
+ *                   title:
+ *                     type: string
+ *                     example: "Sample Event"
+ *                   start:
+ *                     type: string
+ *                     example: "2023-01-01T00:00:00Z"
+ *                   backgroundColor:
+ *                     type: string
+ *                     example: "#ff0000"
+ *                   allDay:
+ *                     type: boolean
+ *                     example: false
+ *                   editable:
+ *                     type: boolean
+ *                     example: false
+ *                   className:
+ *                     type: string
+ *                     example: "event-facebook"
+ *                   borderColor:
+ *                     type: string
+ *                     example: "green"
+ *                   posted:
+ *                     type: boolean
+ *                     example: true
+ *       400:
+ *         description: Missing Clerk user ID.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Clerk user ID missing"
+ *       401:
+ *         description: Unauthorized user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       404:
+ *         description: Event not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Event not found"
+ *       405:
+ *         description: Method not allowed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Method not allowed"
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
+    if (req.method !== "GET") {
+        return res.status(405).json({ error: "Method not allowed" });
+    }
 
     const { userId } = getAuth(req);
 

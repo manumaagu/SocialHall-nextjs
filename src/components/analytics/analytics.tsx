@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "@clerk/clerk-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebookSquare,
@@ -9,7 +8,15 @@ import {
   faTiktok,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPen,
+  faUsers,
+  faChartLine,
+  faHeart,
+  faComments,
+  faStickyNote,
+  faShareNodes,
+} from "@fortawesome/free-solid-svg-icons";
 import { Bar, Line } from "react-chartjs-2";
 import { socialMediaColor } from "../../utils/event";
 import {
@@ -101,12 +108,15 @@ const AnalyticsPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/auth/connected-profiles", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://localhost:3000/api/auth/connected-profiles",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -177,9 +187,12 @@ const AnalyticsPage: React.FC = () => {
       return;
     }
 
-    const response = await fetch(`http://localhost:3000/api/analytics/${network}`, {
-      method: "GET",
-    });
+    const response = await fetch(
+      `http://localhost:3000/api/analytics/${network}`,
+      {
+        method: "GET",
+      }
+    );
 
     const newAnalytics = {
       network: network,
@@ -479,7 +492,12 @@ const AnalyticsPage: React.FC = () => {
         <main className="flex flex-1">
           <div className="w-1/4 p-4 bg-gray-100 border-r-2 border-r-black-light mb-4">
             <h1 className="text-2xl font-bold mb-4 text-center">
-              Social Media
+              <span className="hidden md:inline md:truncate md:overflow-auto ">Social Media</span>
+              <FontAwesomeIcon
+                icon={faShareNodes}
+                className="inline md:hidden"
+                title="Social Media"
+              />
             </h1>
             <div className="flex flex-col space-y-2">
               {connectedSocialNetworks.length > 0 ? (
@@ -492,8 +510,11 @@ const AnalyticsPage: React.FC = () => {
                         ? "bg-custom-purple-dark text-white"
                         : "bg-custom-purple"
                     }`}
+                    title={network.charAt(0).toUpperCase() + network.slice(1)}
                   >
-                    {network.charAt(0).toUpperCase() + network.slice(1)}
+                    <span className="hidden md:inline">
+                      {network.charAt(0).toUpperCase() + network.slice(1)}
+                    </span>
                     <FontAwesomeIcon
                       icon={getSocialIcon(network)}
                       className="ml-2"
@@ -513,7 +534,7 @@ const AnalyticsPage: React.FC = () => {
             </div>
           </div>
           <div className="w-3/4 p-4">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <div className="flex gap-4">
                 <button
                   onClick={() => setChartType("line")}
@@ -536,56 +557,85 @@ const AnalyticsPage: React.FC = () => {
                   Bar
                 </button>
               </div>
-              <div className="flex flex-grow justify-end gap-8 mr-4">
+              <div className="hidden font-bold text-lg lg:hidden md:inline">
+                {selectedMetric.charAt(0).toUpperCase() +
+                  selectedMetric.slice(1)}
+              </div>
+              <div className="flex justify-end gap-8 mr-4 items-center">
                 <button
                   onClick={() => handleMetricChange(1)}
                   className={` ${
                     selectedMetric === "followers"
                       ? "text-lg font-bold underline"
-                      : ""
+                      : "opacity-50 lg:opacity-100"
                   }`}
                 >
-                  Followers
+                  <span className="hidden lg:inline">Followers</span>
+                  <FontAwesomeIcon
+                    icon={faUsers}
+                    className="inline lg:hidden"
+                    title="Followers"
+                  />
                 </button>
                 <button
                   onClick={() => handleMetricChange(2)}
                   className={` ${
                     selectedMetric === "impressions"
                       ? "text-lg font-bold underline"
-                      : ""
+                      : "opacity-50 lg:opacity-100"
                   }`}
                 >
-                  Impressions
+                  <span className="hidden lg:inline">Impressions</span>
+                  <FontAwesomeIcon
+                    icon={faChartLine}
+                    className="inline lg:hidden"
+                    title="Impressions"
+                  />
                 </button>
                 <button
                   onClick={() => handleMetricChange(3)}
                   className={` ${
                     selectedMetric === "likes"
                       ? "text-lg font-bold underline"
-                      : ""
+                      : "opacity-50 lg:opacity-100"
                   }`}
                 >
-                  Likes
+                  <span className="hidden lg:inline">Likes</span>
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    className="inline lg:hidden"
+                    title="Likes"
+                  />
                 </button>
                 <button
                   onClick={() => handleMetricChange(4)}
                   className={` ${
                     selectedMetric === "comments"
                       ? "text-lg font-bold underline"
-                      : ""
+                      : "opacity-50 lg:opacity-100"
                   }`}
                 >
-                  Comments
+                  <span className="hidden lg:inline">Comments</span>
+                  <FontAwesomeIcon
+                    icon={faComments}
+                    className="inline lg:hidden"
+                    title="Comments"
+                  />
                 </button>
                 <button
                   onClick={() => handleMetricChange(5)}
                   className={` ${
                     selectedMetric === "posts"
                       ? "text-lg font-bold underline"
-                      : ""
+                      : "opacity-50 lg:opacity-100"
                   }`}
                 >
-                  Posts
+                  <span className="hidden lg:inline">Posts</span>
+                  <FontAwesomeIcon
+                    icon={faStickyNote}
+                    className="inline lg:hidden"
+                    title="Posts"
+                  />
                 </button>
               </div>
             </div>

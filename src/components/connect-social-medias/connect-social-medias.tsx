@@ -35,9 +35,11 @@ const ConnectSocialMedias: React.FC = () => {
   const [error, setError] = useState(null);
   const [linkedinTokenExpired, setLinkedinTokenExpired] = useState(false);
 
+  const clientUrl = "http://localhost:3000"; // Update this with your client URL
+
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/connected-profiles", {
+      const response = await fetch(`${clientUrl}/api/auth/connected-profiles`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -51,9 +53,10 @@ const ConnectSocialMedias: React.FC = () => {
       const data = await response.json();
       setData(data);
       Object.keys(data.profiles).forEach((key) => {
-        if(key !== 'linkedin') return;
-        if(data.profiles[key].date >= Date.now()) setLinkedinTokenExpired(false);
-        else setLinkedinTokenExpired(true);
+        if (key.toLocaleLowerCase() !== "linkedin") return;
+        if (data.profiles[key].date >= Date.now()) {
+          setLinkedinTokenExpired(false);
+        } else setLinkedinTokenExpired(true);
       });
     } catch (err) {
       console.error(err);
@@ -64,7 +67,7 @@ const ConnectSocialMedias: React.FC = () => {
 
   const handleLinkedinExpired = () => {
     setLinkedinTokenExpired(true);
-  }
+  };
 
   useEffect(() => {
     fetchData();
@@ -77,13 +80,16 @@ const ConnectSocialMedias: React.FC = () => {
 
   return (
     <>
+      {/* <div className="flex justify-center items-center h-100% w-full">
+        <img src="/images/image.png"></img>
+      </div> */}
       {!loading && (
         <>
           <h1 className="text-6xl text-center mt-10">
             Conecta tus redes sociales
           </h1>
           <div className="flex flex-col items-center mt-8">
-            <div className="grid grid-cols-2 gap-20 border-l border-r px-8">
+            <div className="grid grid-cols-1 gap-20 border-l border-r px-8 lg:grid-cols-2">
               {data?.profiles.twitter ? (
                 <SocialMediaConnected
                   network="Twitter"
@@ -94,7 +100,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Twitter"
                   icon={faXTwitter}
-                  authUrl="http://localhost:3000/api/auth/twitter"
+                  authUrl={`${clientUrl}/api/auth/twitter`}
                 />
               )}
 
@@ -108,7 +114,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Facebook"
                   icon={faFacebookSquare}
-                  authUrl="http://localhost:3000/api/auth/facebook"
+                  authUrl={`${clientUrl}/api/auth/facebook`}
                 />
               )}
 
@@ -122,7 +128,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Tiktok"
                   icon={faTiktok}
-                  authUrl="http://localhost:3000/api/auth/tiktok"
+                  authUrl={`${clientUrl}/api/auth/tiktok`}
                 />
               )}
 
@@ -136,7 +142,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Youtube"
                   icon={faYoutube}
-                  authUrl="http://localhost:3000/api/auth/youtube"
+                  authUrl={`${clientUrl}/api/auth/youtube`}
                 />
               )}
 
@@ -150,7 +156,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Instagram"
                   icon={faInstagram}
-                  authUrl="http://localhost:3000/api/auth/instagram"
+                  authUrl={`${clientUrl}/api/auth/instagram`}
                 />
               )}
 
@@ -165,7 +171,7 @@ const ConnectSocialMedias: React.FC = () => {
                 <SocialMediaLogin
                   socialMediaName="Linkedin"
                   icon={faLinkedin}
-                  authUrl="http://localhost:3000/api/auth/linkedin"
+                  authUrl={`${clientUrl}/api/auth/linkedin`}
                 />
               )}
             </div>
