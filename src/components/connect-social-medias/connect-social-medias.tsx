@@ -35,7 +35,7 @@ const ConnectSocialMedias: React.FC = () => {
   const [error, setError] = useState(null);
   const [linkedinTokenExpired, setLinkedinTokenExpired] = useState(false);
 
-  const clientUrl = "http://localhost:3000"; // Update this with your client URL
+  const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL; // Update this with your client URL
 
   const fetchData = async () => {
     try {

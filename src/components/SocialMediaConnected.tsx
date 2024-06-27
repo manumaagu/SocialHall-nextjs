@@ -45,6 +45,8 @@ interface Time {
   seconds: number;
 }
 
+const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
+
 const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
   network,
   profile,
@@ -74,7 +76,7 @@ const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
   const revokeSocialMedia = async (network: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/revoke/${network.toLowerCase()}`,
+        `${clientUrl}/api/revoke/${network.toLowerCase()}`,
         {
           method: "POST",
           headers: {

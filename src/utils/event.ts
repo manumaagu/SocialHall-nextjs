@@ -35,7 +35,10 @@ export async function createEvent(userId: string, socialMedia: string, pendingId
         content: content
     };
 
-    await fetch('http://localhost:3000/api/events/create', {
+    const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
+    console.log(clientUrl); 
+
+    await fetch(`${clientUrl}/api/events/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)

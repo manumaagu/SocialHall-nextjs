@@ -36,6 +36,8 @@ interface TwitterPost {
   text: string;
 }
 
+const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
+
 const PostPage = () => {
   const [profiles, setProfiles] = useState<Data | null>(null);
   const [posts, setPosts] = useState<TwitterPost[]>();
@@ -46,7 +48,7 @@ const PostPage = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/auth/connected-profiles",
+          `${clientUrl}/api/auth/connected-profiles`,
           {
             method: "GET",
             headers: {
@@ -102,7 +104,7 @@ const PostPage = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/posts/list/${network}`,
+        `${clientUrl}/api/posts/list/${network}`,
         {
           method: "GET",
           headers: {
@@ -133,7 +135,7 @@ const PostPage = () => {
   async function deletePost(network: string, id: string): Promise<void> {
     setSelectedNetwork(network);
 
-    const url = `http://localhost:3000/api/posts/delete/${network}/${id}`;
+    const url = `${clientUrl}/api/posts/delete/${network}/${id}`;
 
     try {
       const response = await fetch(url, {

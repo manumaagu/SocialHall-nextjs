@@ -95,6 +95,8 @@ const initialChartData: ChartDataType = {
   datasets: [],
 };
 
+const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
+
 const AnalyticsPage: React.FC = () => {
   const [profiles, setProfiles] = useState<Data | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -109,7 +111,7 @@ const AnalyticsPage: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/auth/connected-profiles",
+          `${clientUrl}/api/auth/connected-profiles`,
           {
             method: "GET",
             headers: {
@@ -188,7 +190,7 @@ const AnalyticsPage: React.FC = () => {
     }
 
     const response = await fetch(
-      `http://localhost:3000/api/analytics/${network}`,
+      `${clientUrl}/api/analytics/${network}`,
       {
         method: "GET",
       }
