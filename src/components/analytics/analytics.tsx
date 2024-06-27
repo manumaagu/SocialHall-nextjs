@@ -468,6 +468,9 @@ const AnalyticsPage: React.FC = () => {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
+      customCanvasBackgroundColor: {
+        color: '#C24FAB',
+      },
       tooltip: {
         callbacks: {
           title: function (context: any) {
@@ -487,7 +490,7 @@ const AnalyticsPage: React.FC = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="flex flex-col overflow-hidden">
       {!loading && (
         <main className="flex flex-1">
           <div className="w-1/4 p-4 bg-gray-100 border-r-2 border-r-black-light mb-4">
@@ -505,10 +508,10 @@ const AnalyticsPage: React.FC = () => {
                   <button
                     key={network}
                     onClick={() => handleNetworkClick(network)}
-                    className={`py-2 px-4 text-gray-800 rounded shadow bg-custom-purple hover:bg-custom-purple-dark-hover hover:text-white ${
+                    className={`py-2 px-4 text-gray-800 rounded shadow bg-principal-color hover:bg-principal-color-hover hover:text-white ${
                       selectedNetworks?.includes(network)
-                        ? "bg-custom-purple-dark text-white"
-                        : "bg-custom-purple"
+                        ? "bg-principal-color-active text-white hover:bg-principal-color-active-hover"
+                        : "bg-principal-color"
                     }`}
                     title={network.charAt(0).toUpperCase() + network.slice(1)}
                   >
@@ -524,7 +527,7 @@ const AnalyticsPage: React.FC = () => {
               ) : (
                 <Link
                   href={"/connect-social-medias"}
-                  className="py-2 px-4 font-bold bg-custom-purple text-center hover:bg-custom-purple-dark-hover hover:text-white rounded"
+                  className="py-2 px-4 font-bold bg-principal-color text-center hover:bg-principal-color-hover hover:text-white rounded"
                 >
                   <button className="">
                     Click here to connect social media
@@ -534,14 +537,14 @@ const AnalyticsPage: React.FC = () => {
             </div>
           </div>
           <div className="w-3/4 p-4">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mb-4">
               <div className="flex gap-4">
                 <button
                   onClick={() => setChartType("line")}
                   className={`${
                     chartType === "line"
-                      ? "bg-custom-purple-dark text-white"
-                      : "bg-custom-purple text-white"
+                      ? "bg-principal-color-active text-white"
+                      : "bg-principal-color text-white"
                   } py-2 px-4 rounded`}
                 >
                   Line
@@ -550,8 +553,8 @@ const AnalyticsPage: React.FC = () => {
                   onClick={() => setChartType("bar")}
                   className={`${
                     chartType === "bar"
-                      ? "bg-custom-purple-dark text-white"
-                      : "bg-custom-purple text-white"
+                      ? "bg-principal-color-active text-white"
+                      : "bg-principal-color text-white"
                   } py-2 px-4 rounded`}
                 >
                   Bar
@@ -642,6 +645,7 @@ const AnalyticsPage: React.FC = () => {
             <div className="bg-white p-4 rounded w-full h-80vh">
               {(chartType === "line" && (
                 <Line
+                color="black"
                   data={chartData}
                   options={chartOptions}
                   updateMode="show"
@@ -649,6 +653,7 @@ const AnalyticsPage: React.FC = () => {
               )) ||
                 (chartType === "bar" && (
                   <Bar
+                  color="black"
                     data={chartData}
                     options={chartOptions}
                     updateMode="show"

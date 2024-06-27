@@ -184,7 +184,7 @@ const PostPage = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="flex flex-col">
       {!loading && (
         <main className="flex flex-1">
           <div className="w-1/4 p-4 bg-gray-100 border-r-2 border-r-black-light mb-4">
@@ -204,10 +204,10 @@ const PostPage = () => {
                   <button
                     key={network}
                     onClick={() => getPosts(network)}
-                    className={`py-2 px-4 text-gray-800 rounded shadow bg-custom-purple hover:bg-custom-purple-dark-hover hover:text-white ${
+                    className={`py-2 px-4 text-gray-800 rounded shadow bg-principal-color hover:bg-principal-color-hover hover:text-white ${
                       selectedNetwork === network
-                        ? "bg-custom-purple-dark text-white"
-                        : "bg-custom-purple"
+                        ? "bg-principal-color-active text-white hover:bg-principal-color-active-hover"
+                        : "bg-principal-color"
                     }`}
                     title={network.charAt(0).toUpperCase() + network.slice(1)}
                   >
@@ -223,7 +223,7 @@ const PostPage = () => {
               ) : (
                 <Link
                   href={"/connect-social-medias"}
-                  className="py-2 px-4 font-bold bg-custom-purple text-center hover:bg-custom-purple-dark-hover hover:text-white rounded"
+                  className="py-2 px-4 font-bold bg-principal-color text-center hover:bg-principal-color-hover hover:text-white rounded"
                 >
                   <button>Click here to connect social media</button>
                 </Link>
@@ -239,7 +239,7 @@ const PostPage = () => {
                   } Posts`
                 : "Select a social network"}
             </h2>
-            <div className="bg-white p-4 rounded h-full">
+            <div className="p-4 rounded h-full">
               {loading ? (
                 <ReactLoading type={"spin"} color={"#ffffff"} />
               ) : selectedNetwork ? (
@@ -268,7 +268,7 @@ const PostPage = () => {
                   <p>No posts found</p>
                 )
               ) : (
-                <p>Please select a social network to view its posts.</p>
+                <p>Please select a social network to view the posts.</p>
               )}
             </div>
           </div>

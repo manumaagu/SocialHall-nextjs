@@ -48,7 +48,7 @@ const HomePage = () => {
                 </div>
               </div>
               <div>
-                <img src="https://placehold.jp/150x150.png"></img>
+                <img src="/images/Analytics_home.jpg" className=" h-90%"></img>
               </div>
             </div>
           </section>

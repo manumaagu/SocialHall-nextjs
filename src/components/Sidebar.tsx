@@ -13,7 +13,7 @@ const Sidebar: React.FC<{ isOpen: boolean; closeMenu: () => void }> = ({ isOpen,
 
   return (
     <div
-      className={`fixed h-screen bg-custom-purple right-0 top-12 w-80 max-w-full transform ${
+      className={`fixed h-screen bg-principal-color right-0 top-12 w-80 max-w-full transform ${
         isOpen ? "translate-x-0" : "translate-x-full"
       } transition-transform duration-200 ease-linear z-20`}
     >
@@ -23,7 +23,7 @@ const Sidebar: React.FC<{ isOpen: boolean; closeMenu: () => void }> = ({ isOpen,
             className={`p-2 ${
               router.pathname === "/planner"
                 ? "active"
-                : "hover:bg-custom-purple-dark-hover hover:text-white"
+                : "hover:bg-principal-color-hover hover:text-white"
             }`}
             onClick={closeMenu}
           >
@@ -38,7 +38,7 @@ const Sidebar: React.FC<{ isOpen: boolean; closeMenu: () => void }> = ({ isOpen,
             className={`p-2 ${
               router.pathname === "/posts"
                 ? "active"
-                : "hover:bg-custom-purple-dark-hover hover:text-white"
+                : "hover:bg-principal-color-hover hover:text-white"
             }`}
             onClick={closeMenu}
           >
@@ -53,7 +53,7 @@ const Sidebar: React.FC<{ isOpen: boolean; closeMenu: () => void }> = ({ isOpen,
             className={`p-2 ${
               router.pathname === "/connect-social-medias"
                 ? "active"
-                : "hover:bg-custom-purple-dark-hover hover:text-white"
+                : "hover:bg-principal-color-hover hover:text-white"
             }`}
             onClick={closeMenu}
           >

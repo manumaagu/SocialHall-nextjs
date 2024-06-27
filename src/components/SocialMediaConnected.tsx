@@ -200,7 +200,7 @@ const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
         </div>
         <FontAwesomeIcon
           icon={faTimes}
-          className="text-2xl cursor-pointer flex-shrink-0 hover:text-custom-purple-dark-hover"
+          className="text-2xl cursor-pointer flex-shrink-0 hover:text-principal-color-hover"
           onClick={() => handleRevoke(network)}
         />
       </div>

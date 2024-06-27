@@ -40,7 +40,7 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <header className="bg-custom-purple w-screen min-h-16 flex justify-between items-center px-14 mb-4">
+    <header className="bg-principal-color w-screen min-h-16 flex justify-between items-center px-14 mb-4">
       <Link href="/" legacyBehavior>
         <a className="flex items-center gap-4">
           <img
@@ -60,8 +60,8 @@ const Header: React.FC = () => {
             <a
               className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis text-black ${
                 router.pathname === "/planner"
-                  ? "bg-custom-purple-dark text-black"
-                  : "hover:bg-custom-purple-dark-hover hover:text-black justify-center"
+                  ? "bg-principal-color-active text-white"
+                  : "hover:bg-principal-color-hover hover:text-white justify-center"
               }`}
             >
               <button className="text-base p-1 rounded-lg h-full flex-grow">
@@ -72,10 +72,10 @@ const Header: React.FC = () => {
           </Link>
           <Link href="/posts" legacyBehavior>
             <a
-              className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis ${
+              className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis text-black ${
                 router.pathname === "/posts"
-                  ? "bg-custom-purple-dark text-black"
-                  : "hover:bg-custom-purple-dark-hover hover:text-black text-black"
+                  ? "bg-principal-color-active text-white"
+                  : "hover:bg-principal-color-hover hover:text-white "
               }`}
             >
               <button className="text-base p-1 rounded-lg h-full flex-grow">
@@ -88,8 +88,8 @@ const Header: React.FC = () => {
             <a
               className={`p-2 lg:overflow-hidden lg:whitespace-nowrap lg:text-ellipsis text-black ${
                 router.pathname === "/connect-social-medias"
-                  ? "bg-custom-purple-dark text-black"
-                  : "hover:bg-custom-purple-dark-hover hover:text-black"
+                  ? "bg-principal-color-active text-white"
+                  : "hover:bg-principal-color-hover hover:text-white"
               }`}
             >
               <button className=" text-base p-1 rounded-lg h-full flex-grow">
@@ -112,14 +112,14 @@ const Header: React.FC = () => {
         </div>
       ) : (
         <div className="flex gap-8">
-          <Link href="/login" legacyBehavior>
+          <Link href="/login" legacyBehavior  >
             <a>
-              <button className="">Login</button>
+              <button className=" p-2 hover:bg-principal-color-hover hover:rounded">Login</button>
             </a>
           </Link>
           <Link href="/signup" legacyBehavior>
             <a>
-              <button className="">Signup</button>
+              <button className="p-2 hover:bg-principal-color-hover hover:rounded">Signup</button>
             </a>
           </Link>
         </div>

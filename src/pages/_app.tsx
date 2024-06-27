@@ -9,8 +9,13 @@ import { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import Header from "@/components/Header";
 import Head from "next/head";
+import { dark } from "@clerk/themes";
 
-const noHeaderPages = ["/login/[[...index]]", "/signup/[[...index]]", "/api-doc"];
+const noHeaderPages = [
+  "/login/[[...index]]",
+  "/signup/[[...index]]",
+  "/api-doc",
+];
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
@@ -18,7 +23,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   const showHeader = !noHeaderPages.includes(pathname);
 
   return (
-    <ClerkProvider {...pageProps}>
+    <ClerkProvider
+      {...pageProps}
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
       <Head>
         <title>SocialHall</title>
       </Head>
