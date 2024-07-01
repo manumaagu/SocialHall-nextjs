@@ -312,7 +312,7 @@ const PlannerPage = () => {
 
   return (
     <>
-      <div className="mx-12">
+      <div className="mx-12 mb-12">
         {isLoading ? (
           <p>Loading...</p>
         ) : (
