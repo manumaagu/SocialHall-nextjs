@@ -8,7 +8,7 @@ import { verifyUser } from '@/utils/users';
 import { utapi } from '@/uploadthing';
 import * as formidable from 'formidable';
 import { Fields, Files } from 'formidable';
-import { FileEsque } from 'uploadthing/types';
+import fs from 'fs';
 
 export const config = {
     api: {
@@ -129,7 +129,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const form = new formidable.IncomingForm();
 
     form.parse(req, async (err, fields: Fields, files: Files) => {
-        console.log(files.media);
         if (err) {
             return res.status(500).json({ error: "Error parsing form data" });
         }
@@ -140,92 +139,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const postingDate: number = fields.date ? Number(fields.date[0]) : 0;
 
-        const file = files!.media![0] as FileEsque;
+        const file = files!.media![0];
 
-        console.log(file);
+        let newFile: File;
 
-        utapi.uploadFiles(file);
+        fs.readFile(file.filepath, async (err, data) => {
+            if (err) {
+                console.error("Error reading file: ", err);
+            }
 
+            newFile = new File([data], file.originalFilename!, { type: file.mimetype! });
+            const uploadFileRes = await utapi.uploadFiles(newFile);
 
-        // for (const file of filesArray) {
-        //     const fileObject = file![0];
-        //     const body = {
-        //         "registerUploadRequest": {
-        //             "owner": "urn:li:person:" + media.profile_id,
-        //             "recipes": [
-        //                 "urn:li:digitalmediaRecipe:feedshare-" + fileObject.mimetype!.split('/')[0]
-        //             ],
-        //             "serviceRelationships": [
-        //                 {
-        //                     "relationshipType": "OWNER",
-        //                     "identifier": "urn:li:userGeneratedContent"
-        //                 }
-        //             ]
-        //         }
-        //     }
+            const pendingYoutube: InsertPendingYoutube = {
+                id: randomBytes(16).toString('hex'),
+                clerkId: userId,
+                postingDate: postingDate,
+                content: uploadFileRes.data?.key,
+            };
 
-        //     const response = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
-        //         method: 'POST',
-        //         headers: {
-        //             Authorization: `Bearer ${accessToken}`,
-        //             'X-Restli-Protocol-Version': '2.0.0',
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify(body)
-        //     });
+            await db.insert(pendingYoutubeTable).values(pendingYoutube);
 
-        //     if (!response.ok) {
-        //         throw new Error(`Linkedin media upload error: ${response.statusText}`);
-        //     }
-
-        //     const data = await response.json();
-
-        //     assets.push(data.value.asset);
-        //     const uploadUrl = data.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
-
-        //     const fileOpen = fs.readFileSync(fileObject.filepath);
-
-        //     const uploadResponse = await fetch(uploadUrl, {
-        //         method: 'POST',
-        //         headers: {
-        //             Authorization: `Bearer ${accessToken}`,
-        //             'X-Restli-Protocol-Version': '2.0.0',
-        //             'Content-Type': 'application/binary'
-        //         },
-        //         body: fileOpen
-        //     });
-
-        //     if (!uploadResponse.ok) {
-        //         throw new Error(`Linkedin media upload error: ${uploadResponse.statusText}`);
-        //     }
-
-        //     fs.unlink(fileObject.filepath, (err) => {
-        //         if (err) {
-        //             console.error("Error deleting file: ", err);
-        //         }
-        //     });
-        // }
-
-        // console.log("[DEBUG] Linkedin media uploaded successfully");
-
-        // res.status(200).json({ message: "Media uploaded", assets: assets });
+            res.status(200).json({ message: "Youtube posts added to pending queue" });
+        });
     });
-
-
-    
-
-    // const contentToSend = req.body;
-    // const postingDate = contentToSend.date;
-
-    // const pendingYoutube: InsertPendingYoutube = {
-    //     id: randomBytes(16).toString('hex'),
-    //     clerkId: userId,
-    //     postingDate: postingDate,
-    //     content: contentToSend,
-    // };
-
-    // await db.insert(pendingYoutubeTable).values(pendingYoutube);
-
-    // res.status(200).json({ message: "Youtube posts added to pending queue" });
-
 }

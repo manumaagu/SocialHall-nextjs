@@ -104,7 +104,7 @@ const Modal: React.FC<ModalProps> = ({
   // }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center text-black">
+    <div className="fixed inset-0 z-50 flex items-center justify-center text-black overflow-y-scroll">
       <div
         className="bg-black bg-opacity-50 absolute inset-0"
         onClick={onClose}
