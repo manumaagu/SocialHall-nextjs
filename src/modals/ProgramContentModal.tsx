@@ -104,7 +104,7 @@ const Modal: React.FC<ModalProps> = ({
   // }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-scroll text-black">
+    <div className="fixed inset-0 z-50 flex items-center justify-center text-black overflow-y-scroll">
       <div
         className="bg-black bg-opacity-50 absolute inset-0"
         onClick={onClose}
@@ -151,7 +151,7 @@ const Modal: React.FC<ModalProps> = ({
           </button>
           <button
             onClick={onSave}
-            className={`bg-blue-500 hover:bg-blue-600 font-bold py-2 px-4 rounded text-white 
+            className={`hover:bg-blue-600 font-bold py-2 px-4 rounded text-white bg-principal-color
               
             `}
             // disabled={checkConditions()}

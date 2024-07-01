@@ -5,6 +5,16 @@ import { youtubeMediaTable, InsertPendingYoutube, pendingYoutubeTable } from '@/
 import { db } from '@/db/db';
 import { randomBytes } from 'crypto';
 import { verifyUser } from '@/utils/users';
+import { utapi } from '@/uploadthing';
+import * as formidable from 'formidable';
+import { Fields, Files } from 'formidable';
+import fs from 'fs';
+
+export const config = {
+    api: {
+        bodyParser: false,
+    }
+};
 
 /**
  * @swagger
@@ -114,18 +124,43 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(404).json({ error: "Youtube account not found" });
     }
 
-    const contentToSend = req.body;
-    const postingDate = contentToSend.date;
+    let newFile: File;
 
-    const pendingYoutube: InsertPendingYoutube = {
-        id: randomBytes(16).toString('hex'),
-        clerkId: userId,
-        postingDate: postingDate,
-        content: contentToSend,
-    };
+    const form = new formidable.IncomingForm();
 
-    await db.insert(pendingYoutubeTable).values(pendingYoutube);
+    form.parse(req, async (err, fields: Fields, files: Files) => {
+        if (err) {
+            return res.status(500).json({ error: "Error parsing form data" });
+        }
 
-    res.status(200).json({ message: "Youtube posts added to pending queue" });
+        if (!files) {
+            return res.status(400).json({ error: "No file provided" });
+        }
 
+        const postingDate: number = fields.date ? Number(fields.date[0]) : 0;
+
+        const file = files!.media![0];
+
+        let newFile: File;
+
+        fs.readFile(file.filepath, async (err, data) => {
+            if (err) {
+                console.error("Error reading file: ", err);
+            }
+
+            newFile = new File([data], file.originalFilename!, { type: file.mimetype! });
+            const uploadFileRes = await utapi.uploadFiles(newFile);
+
+            const pendingYoutube: InsertPendingYoutube = {
+                id: randomBytes(16).toString('hex'),
+                clerkId: userId,
+                postingDate: postingDate,
+                content: uploadFileRes.data?.key,
+            };
+
+            await db.insert(pendingYoutubeTable).values(pendingYoutube);
+
+            res.status(200).json({ message: "Youtube posts added to pending queue" });
+        });
+    });
 }

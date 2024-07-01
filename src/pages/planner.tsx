@@ -22,6 +22,8 @@ interface EventInfo {
   };
 }
 
+const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
+
 const PlannerPage = () => {
   const [isContentModalOpen, setIsContentModalOpen] = useState(false);
   const [isNoMediaModalOpen, setIsNoMediaModalOpen] = useState(false);
@@ -89,7 +91,7 @@ const PlannerPage = () => {
       if (mediaToUpload.has("media[0]")) {
 
         const response = await fetch(
-          `http://localhost:3000/api/upload-media/${network}`,
+          `${clientUrl}/api/upload-media/${network}`,
           {
             method: "POST",
             body: mediaToUpload,
@@ -128,7 +130,7 @@ const PlannerPage = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:3000/api/posts/post/${network}`,
+          `${clientUrl}/api/posts/post/${network}`,
           {
             method: "POST",
             body: contentToSend,
@@ -219,7 +221,7 @@ const PlannerPage = () => {
         )
       ) {
         const response = await fetch(
-          `http://localhost:3000/api/events/delete/${event.id}`,
+          `${clientUrl}/api/events/delete/${event.id}`,
           {
             method: "DELETE",
             headers: {
@@ -255,7 +257,7 @@ const PlannerPage = () => {
 
   const getEvents = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/events/list", {
+      const response = await fetch(`${clientUrl}/api/events/list`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -282,7 +284,7 @@ const PlannerPage = () => {
   const getMedias = useCallback(async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/auth/connected-profiles",
+        `${clientUrl}/api/auth/connected-profiles`,
         {
           method: "GET",
           headers: {

@@ -131,12 +131,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const { data: profile } = await loggedClient.v2.me({ "user.fields": ["profile_image_url", "public_metrics"] });
 
-        const followObject = {
-            "date": Date.now(),
-            "count": profile.public_metrics?.followers_count,
-        }
+        // const followObject = {
+        //     "date": Date.now(),
+        //     "count": profile.public_metrics?.followers_count,
+        // }
 
-        const followArray = [followObject];
+        // const followArray = [followObject];
+
+        let followArray: any[] = [];
+
+        for (let i = 0; i < 3; i++) {
+            const date = new Date();
+            date.setDate(date.getDate() + i); 
+
+            const followObject = {
+                date: date,
+                count: Math.floor(Math.random() * 1001),
+            };
+
+            followArray.push(followObject);
+        }
 
         const twitterMedia: InsertTwitterMedia = {
             id: randomBytes(16).toString("hex"),

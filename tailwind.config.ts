@@ -14,9 +14,10 @@ const config: Config = {
       xl: '1440px',
     },
     colors: {
-      'custom-purple': '#C14FAA',
-      'custom-purple-dark': '#5BDED9',
-      'custom-purple-dark-hover': '#965BDE',
+      'principal-color': '#C14FAA',
+      'principal-color-hover': '#97578A',
+      'principal-color-active': '#6D5167',
+      'principal-color-active-hover': '#283325',
       'custom-grey': '#DADADA',
       'custom-grey-disabled': '#E9ECEF',
       'custom-blue': '#1DA1F2',

@@ -23,6 +23,8 @@ interface Data {
   profiles: SocialProfiles;
 }
 
+const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
+
 const HomePage = () => {
   const [data, setData] = useState<Data | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ const HomePage = () => {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/auth/connected-profiles",
+        `${clientUrl}/api/auth/connected-profiles`,
         {
           method: "GET",
           headers: {

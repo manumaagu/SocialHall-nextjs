@@ -45,6 +45,8 @@ interface Time {
   seconds: number;
 }
 
+const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
+
 const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
   network,
   profile,
@@ -74,7 +76,7 @@ const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
   const revokeSocialMedia = async (network: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/revoke/${network.toLowerCase()}`,
+        `${clientUrl}/api/revoke/${network.toLowerCase()}`,
         {
           method: "POST",
           headers: {
@@ -200,7 +202,7 @@ const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
         </div>
         <FontAwesomeIcon
           icon={faTimes}
-          className="text-2xl cursor-pointer flex-shrink-0 hover:text-custom-purple-dark-hover"
+          className="text-2xl cursor-pointer flex-shrink-0 hover:text-principal-color-hover"
           onClick={() => handleRevoke(network)}
         />
       </div>

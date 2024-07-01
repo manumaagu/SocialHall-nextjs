@@ -5,9 +5,9 @@ import Login from "@/components/login/login";
 const AnalyticsPage = () => {
   return (
     <>
-      {/* <SignedOut>
+      <SignedOut>
         <Login />
-      </SignedOut> */}
+      </SignedOut>
       <SignedIn>
         <Analytics />
       </SignedIn>

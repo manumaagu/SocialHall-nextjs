@@ -123,136 +123,136 @@ export default {
 //   }
 // }
 
-// async function checkAndPostYoutube(db: LibSQLDatabase<Record<string, never>>) {
-//   const pendingYoutube = await PendingYoutube.findPending();
+async function checkAndPostYoutube(db: LibSQLDatabase<Record<string, never>>) {
+  const pendingYoutube = await PendingYoutube.findPending();
 
-//   console.log("[CRONJOB] - Checking for pending youtube posts");
+  console.log("[CRONJOB] - Checking for pending youtube posts");
 
-//   if (pendingYoutube.length === 0) {
-//     return;
-//   }
+  if (pendingYoutube.length === 0) {
+    return;
+  }
 
-//   for (const post of pendingYoutube) {
-//     const pendingId = post.id;
-//     const youtubeMedia = await YoutubeMedia.findByUser(post.clerkId);
+  for (const post of pendingYoutube) {
+    const pendingId = post.id;
+    const youtubeMedia = await YoutubeMedia.findByUser(post.clerkId);
 
-//     if (!youtubeMedia || youtubeMedia.length === 0) {
-//       continue;
-//     }
-//     const tokenRefresh = youtubeMedia[0].tokenRefresh;
+    if (!youtubeMedia || youtubeMedia.length === 0) {
+      continue;
+    }
+    const tokenRefresh = youtubeMedia[0].tokenRefresh;
 
-//     const auth = new google.auth.OAuth2(
-//       process.env.GOOGLE_CLIENT_ID,
-//       process.env.GOOGLE_CLIENT_SECRET,
-//       process.env.GOOGLE_CALLBACK_URL
-//     );
+    const auth = new google.auth.OAuth2(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      process.env.GOOGLE_CALLBACK_URL
+    );
 
-//     auth.setCredentials({
-//       refresh_token: tokenRefresh,
-//     });
+    auth.setCredentials({
+      refresh_token: tokenRefresh,
+    });
 
-//     auth.on('tokens', async (tokens) => {
-//       if (tokens.access_token) {
-//         youtubeMedia[0].tokenAccess = tokens.access_token;
-//         youtubeMedia[0].tokenExpiration = tokens.expiry_date;
-//       }
-//     });
+    auth.on('tokens', async (tokens) => {
+      if (tokens.access_token) {
+        youtubeMedia[0].tokenAccess = tokens.access_token;
+        youtubeMedia[0].tokenExpiration = tokens.expiry_date;
+      }
+    });
 
-//     const youtube = google.youtube({
-//       version: 'v3',
-//       auth
-//     });
+    const youtube = google.youtube({
+      version: 'v3',
+      auth
+    });
 
-//     let body = {};
+    let body = {};
 
-//     switch (post.content.type.toLowerCase()) {
-//       case "short":
-//         body = {
-//           part: 'snippet,contentDetails,status',
-//           resource: {
-//             snippet: {
-//               title: post.content.title,
-//               description: post.content.description,
-//               tags: ['shorts'],
-//             },
-//             status: {
-//               privacyStatus: 'private'
-//             }
-//           },
-//           media: {
-//             body: fs.createReadStream(post.content.mediaPath)
-//           }
-//         }
-//         break;
-//       case "video":
-//         body = {
-//           part: 'snippet,contentDetails,status',
-//           resource: {
-//             snippet: {
-//               title: post.content.title,
-//               description: post.content.description
-//             },
-//             status: {
-//               privacyStatus: 'private'
-//             }
-//           },
-//           media: {
-//             body: fs.createReadStream(post.content.mediaPath)
-//           }
-//         }
-//         break;
-//       default:
-//         break;
-//     }
+    switch (post.content.type.toLowerCase()) {
+      case "short":
+        body = {
+          part: 'snippet,contentDetails,status',
+          resource: {
+            snippet: {
+              title: post.content.title,
+              description: post.content.description,
+              tags: ['shorts'],
+            },
+            status: {
+              privacyStatus: 'private'
+            }
+          },
+          media: {
+            body: fs.createReadStream(post.content.mediaPath)
+          }
+        }
+        break;
+      case "video":
+        body = {
+          part: 'snippet,contentDetails,status',
+          resource: {
+            snippet: {
+              title: post.content.title,
+              description: post.content.description
+            },
+            status: {
+              privacyStatus: 'private'
+            }
+          },
+          media: {
+            body: fs.createReadStream(post.content.mediaPath)
+          }
+        }
+        break;
+      default:
+        break;
+    }
 
-//     const postedContent = await youtube.videos.insert(body);
+    const postedContent = await youtube.videos.insert(body);
 
-//     if (postedContent.status !== 200) {
-//       console.error("Error posting content to youtube");
-//       console.log(postedContent);
-//       continue;
-//     }
+    if (postedContent.status !== 200) {
+      console.error("Error posting content to youtube");
+      console.log(postedContent);
+      continue;
+    }
 
-//     fs.unlink(post.content.mediaPath, (err) => {
-//       if (err) {
-//         console.error("Error deleting file: ", err);
-//       }
-//     });
+    fs.unlink(post.content.mediaPath, (err) => {
+      if (err) {
+        console.error("Error deleting file: ", err);
+      }
+    });
 
-//     const event = await Event.findByPendingId(pendingId);
-//     event[0].posted = true;
+    const event = await Event.findByPendingId(pendingId);
+    event[0].posted = true;
 
-//     const impressions = Math.floor(Math.random() * 1000);
-//     const comments = Math.floor(impressions * 0.1);
-//     const likes = Math.floor(impressions * 0.2);
+    const impressions = Math.floor(Math.random() * 1000);
+    const comments = Math.floor(impressions * 0.1);
+    const likes = Math.floor(impressions * 0.2);
 
-//     const statisticsObject = {
-//       "date": Date.now(),
-//       "impressions": impressions,
-//       "comments": comments,
-//       "likes": likes,
-//     }
+    const statisticsObject = {
+      "date": Date.now(),
+      "impressions": impressions,
+      "comments": comments,
+      "likes": likes,
+    }
 
-//     const statisticsArray = [statisticsObject];
+    const statisticsArray = [statisticsObject];
 
-//     const postObject = {
-//       id: postedContent.data.id,
-//       title: post.content.title,
-//       description: post.content.description,
-//       date: new Date().getTime(),
-//       statisticsArray: statisticsArray
-//     }
+    const postObject = {
+      id: postedContent.data.id,
+      title: post.content.title,
+      description: post.content.description,
+      date: new Date().getTime(),
+      statisticsArray: statisticsArray
+    }
 
-//     youtubeMedia[0].posts.push(postObject);
+    youtubeMedia[0].posts.push(postObject);
 
-//     await youtubeMedia[0].save();
-//     await event[0].save();
+    await youtubeMedia[0].save();
+    await event[0].save();
 
-//     console.log("[CRONJOB] - Youtube video uploaded successfully: ", postedContent.data.id);
+    console.log("[CRONJOB] - Youtube video uploaded successfully: ", postedContent.data.id);
 
-//     await post.delete();
-//   }
-// }
+    await post.delete();
+  }
+}
 
 async function checkAndPostLinkedin(db: LibSQLDatabase<Record<string, never>>) {
   const pendingLinkedin = await db.select().from(pendingLinkedinTable);
