@@ -12,6 +12,7 @@ import {
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import ReactLoading from "react-loading";
 import Link from "next/link";
+import toast, { Toaster } from "react-hot-toast";
 
 interface SocialProfiles {
   twitter?: Profile;
@@ -43,6 +44,8 @@ const PostPage = () => {
   const [posts, setPosts] = useState<TwitterPost[]>();
   const [loading, setLoading] = useState<Boolean>(true);
   const [selectedNetwork, setSelectedNetwork] = useState<string | null>(null);
+
+  const notifyDelete = () => toast.error("Post deleted successfully!");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -103,15 +106,12 @@ const PostPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        `${clientUrl}/api/posts/list/${network}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${clientUrl}/api/posts/list/${network}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.status === 404) {
         setPosts([]);
@@ -149,9 +149,8 @@ const PostPage = () => {
         throw new Error("Network response was not ok");
       }
 
-      if (response.ok) {
-        getPosts(network);
-      }
+      getPosts(network);
+      notifyDelete();
     } catch (err) {
       console.error(err);
     }
@@ -276,6 +275,7 @@ const PostPage = () => {
           </div>
         </main>
       )}
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
 };

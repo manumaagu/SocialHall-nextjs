@@ -129,26 +129,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const picture = response.data.items[0].snippet.thumbnails.default.url;
     const subscriberCount = response.data.items[0].statistics.subscriberCount;
 
-    // const followerObject = {
-    //     "date": Date.now(),
-    //     "count": subscriberCount
-    // }
-
-    // const followerArray = [followerObject];
-
-    let followArray: any[] = [];
-
-    for (let i = 0; i < 3; i++) {
-        const date = new Date();
-        date.setDate(date.getDate() + i);
-
-        const followObject = {
-            date: date,
-            count: Math.floor(Math.random() * 1001),
-        };
-
-        followArray.push(followObject);
+    const followerObject = {
+        "date": Date.now(),
+        "count": subscriberCount
     }
+
+    const followerArray = [followerObject];
+
+    // let followArray: any[] = [];
+
+    // for (let i = 0; i < 3; i++) {
+    //     const date = new Date();
+    //     date.setDate(date.getDate() + i);
+
+    //     const followObject = {
+    //         date: date,
+    //         count: Math.floor(Math.random() * 1001),
+    //     };
+
+    //     followArray.push(followObject);
+    // }
 
     try {
         const youtubeMedia: InsertYoutubeMedia = {
@@ -162,7 +162,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             profile_username: username,
             profile_url: url,
             profile_picture: picture,
-            profile_followers: JSON.stringify(followArray),
+            profile_followers: JSON.stringify(followerArray),
         };
 
         await db.insert(youtubeMediaTable).values(youtubeMedia);

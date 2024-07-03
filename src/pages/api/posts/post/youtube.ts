@@ -140,6 +140,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const postingDate: number = fields.date ? Number(fields.date[0]) : 0;
 
         const file = files!.media![0];
+        const title = fields.title ? fields.title[0] : "";
+        const description = fields.description ? fields.description[0] : "";
+        const type = fields.type ? fields.type[0] : ""; 
 
         let newFile: File;
 
@@ -151,11 +154,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             newFile = new File([data], file.originalFilename!, { type: file.mimetype! });
             const uploadFileRes = await utapi.uploadFiles(newFile);
 
+            const content = {
+                title: title,
+                description: description,
+                type: type,
+                mediaKey: uploadFileRes.data?.key,
+            }
+
             const pendingYoutube: InsertPendingYoutube = {
                 id: randomBytes(16).toString('hex'),
                 clerkId: userId,
                 postingDate: postingDate,
-                content: uploadFileRes.data?.key,
+                content: JSON.stringify(content),
             };
 
             await db.insert(pendingYoutubeTable).values(pendingYoutube);
