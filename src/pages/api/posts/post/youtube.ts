@@ -9,6 +9,8 @@ import { utapi } from '@/uploadthing';
 import * as formidable from 'formidable';
 import { Fields, Files } from 'formidable';
 import fs from 'fs';
+import { createEvent } from '@/utils/event';
+
 
 export const config = {
     api: {
@@ -142,7 +144,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const file = files!.media![0];
         const title = fields.title ? fields.title[0] : "";
         const description = fields.description ? fields.description[0] : "";
-        const type = fields.type ? fields.type[0] : ""; 
+        const type = fields.type ? fields.type[0] : "";
 
         let newFile: File;
 
@@ -169,6 +171,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             };
 
             await db.insert(pendingYoutubeTable).values(pendingYoutube);
+
+            await createEvent(userId, 'youtube', pendingYoutube.id, postingDate, title ? title : "Youtube video, just media");
 
             res.status(200).json({ message: "Youtube posts added to pending queue" });
         });

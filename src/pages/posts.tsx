@@ -186,60 +186,63 @@ const PostPage = () => {
 
   return (
     <div className="flex flex-col">
-      {!loading && (
-        <main className="flex flex-1">
-          <div className="w-1/4 p-4 bg-gray-100 border-r-2 border-r-black-light mb-4">
-            <h1 className="text-2xl font-bold mb-4 text-center">
-              <span className="hidden md:inline md:truncate md:overflow-auto ">
-                Social Media
-              </span>
-              <FontAwesomeIcon
-                icon={faShareNodes}
-                className="inline md:hidden"
-                title="Social Media"
-              />
-            </h1>
-            <div className="flex flex-col space-y-2 justify-center">
-              {connectedSocialNetworks.length > 0 ? (
-                connectedSocialNetworks.map((network) => (
-                  <button
-                    key={network}
-                    onClick={() => getPosts(network)}
-                    className={`py-2 px-4 text-gray-800 rounded shadow bg-principal-color hover:bg-principal-color-hover hover:text-white ${
-                      selectedNetwork === network
-                        ? "bg-principal-color-active text-white hover:bg-principal-color-active-hover"
-                        : "bg-principal-color"
-                    }`}
-                    title={network.charAt(0).toUpperCase() + network.slice(1)}
-                  >
-                    <span className="hidden md:inline">
-                      {network.charAt(0).toUpperCase() + network.slice(1)}
-                    </span>
-                    <FontAwesomeIcon
-                      icon={getSocialIcon(network)}
-                      className="ml-2"
-                    />
-                  </button>
-                ))
-              ) : (
-                <Link
-                  href={"/connect-social-medias"}
-                  className="py-2 px-4 font-bold bg-principal-color text-center hover:bg-principal-color-hover hover:text-white rounded"
+      <main className="flex flex-1">
+        <div className="w-1/4 p-4 bg-gray-100 border-r-2 border-r-black-light mb-4">
+          <h1 className="text-2xl font-bold mb-4 text-center">
+            <span className="hidden md:inline md:truncate md:overflow-auto ">
+              Social Media
+            </span>
+            <FontAwesomeIcon
+              icon={faShareNodes}
+              className="inline md:hidden"
+              title="Social Media"
+            />
+          </h1>
+          <div className="flex flex-col space-y-2 justify-center">
+            {connectedSocialNetworks.length > 0 &&
+              !loading &&
+              connectedSocialNetworks.map((network) => (
+                <button
+                  key={network}
+                  onClick={() => getPosts(network)}
+                  className={`py-2 px-4 text-gray-800 rounded shadow bg-principal-color hover:bg-principal-color-hover hover:text-white ${
+                    selectedNetwork === network
+                      ? "bg-principal-color-active text-white hover:bg-principal-color-active-hover"
+                      : "bg-principal-color"
+                  }`}
+                  title={network.charAt(0).toUpperCase() + network.slice(1)}
                 >
-                  <button>Click here to connect social media</button>
-                </Link>
-              )}
-            </div>
+                  <span className="hidden md:inline">
+                    {network.charAt(0).toUpperCase() + network.slice(1)}
+                  </span>
+                  <FontAwesomeIcon
+                    icon={getSocialIcon(network)}
+                    className="ml-2"
+                  />
+                </button>
+              ))}
+
+            {connectedSocialNetworks.length <= 0 && !loading && (
+              <Link
+                href={"/connect-social-medias"}
+                className="py-2 px-4 font-bold bg-principal-color text-center hover:bg-principal-color-hover hover:text-white rounded"
+              >
+                <button>Click here to connect social media</button>
+              </Link>
+            )}
+            {loading && <ReactLoading type={"spin"} color={"#ffffff"} className="self-center" />}
           </div>
-          <div className="w-3/4 p-4">
-            <h2 className="text-xl font-semibold mb-4 pl-3">
-              {selectedNetwork
-                ? `${
-                    selectedNetwork.charAt(0).toUpperCase() +
-                    selectedNetwork.slice(1)
-                  } Posts`
-                : "Select a social network"}
-            </h2>
+        </div>
+        <div className="w-3/4 p-4">
+          <h2 className="text-xl font-semibold mb-4 pl-3">
+            {selectedNetwork
+              ? `${
+                  selectedNetwork.charAt(0).toUpperCase() +
+                  selectedNetwork.slice(1)
+                } Posts`
+              : "Select a social network"}
+          </h2>
+          {!loading && (
             <div className="p-4 rounded h-full">
               {loading ? (
                 <ReactLoading type={"spin"} color={"#ffffff"} />
@@ -250,7 +253,7 @@ const PostPage = () => {
                       key={post.id}
                       className="flex mb-4 justify-between border-b pb-2"
                     >
-                      <p>{post.text}</p>
+                      <p>{post.text ? post.text : "No title, just media"}</p>
                       <div className="flex gap-3 ml-4">
                         <FontAwesomeIcon
                           icon={faEye}
@@ -272,9 +275,14 @@ const PostPage = () => {
                 <p>Please select a social network to view the posts.</p>
               )}
             </div>
-          </div>
-        </main>
-      )}
+          )}
+          {loading && (
+            <div className="w-3/4 p-4">
+              <ReactLoading type={"spin"} color={"#ffffff"} />
+            </div>
+          )}
+        </div>
+      </main>
       <Toaster position="top-right" reverseOrder={false} />
     </div>
   );

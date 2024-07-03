@@ -136,20 +136,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const followerArray = [followerObject];
 
-    // let followArray: any[] = [];
-
-    // for (let i = 0; i < 3; i++) {
-    //     const date = new Date();
-    //     date.setDate(date.getDate() + i);
-
-    //     const followObject = {
-    //         date: date,
-    //         count: Math.floor(Math.random() * 1001),
-    //     };
-
-    //     followArray.push(followObject);
-    // }
-
     try {
         const youtubeMedia: InsertYoutubeMedia = {
             id: randomBytes(16).toString("hex"),
