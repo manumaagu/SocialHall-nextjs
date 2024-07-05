@@ -33,6 +33,7 @@ const PlannerPage = () => {
   const [time, setTime] = useState("");
   const [contents, setContents] = useState<{}>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingSavePost, setLoadingSavePost] = useState(false);
 
   const closeModal = useCallback(() => {
     setContents({});
@@ -47,6 +48,8 @@ const PlannerPage = () => {
   const notifyDelete = () => toast.error("Post deleted successfully!");
 
   const saveContent = useCallback(async () => {
+    setLoadingSavePost(true);
+    setIsContentModalOpen(true);
     const dateTime = `${postDate} ${time}`;
     const dateTimestamp = new Date(dateTime).getTime();
 
@@ -123,11 +126,12 @@ const PlannerPage = () => {
 
         getEvents();
         notifyPost();
+        setLoadingSavePost(false);
+        closeModal();
       } catch (err) {
         console.error(err);
       }
     });
-    closeModal();
   }, [contents, postDate, time, closeModal]);
 
   const handleDateSelect = useCallback(
@@ -339,6 +343,7 @@ const PlannerPage = () => {
               content={contents}
               onContentChange={handleContentChange}
               socialMedias={medias}
+              loadingSavePost={loadingSavePost}
             ></ContentModal>
             <NoMediasModal
               isOpen={isNoMediaModalOpen}

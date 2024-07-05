@@ -17,6 +17,7 @@ import {
   YoutubeContentType,
   TwitterContent,
 } from "../interfaces/social-media";
+import ReactLoading from "react-loading";
 
 interface ModalProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ interface ModalProps {
   socialMedias: string[];
   content: { [key: string]: SocialMediaContent };
   onContentChange: (AllSocialMediaContent: any) => void;
+  loadingSavePost: boolean;
 }
 
 interface IconMap {
@@ -53,6 +55,7 @@ const Modal: React.FC<ModalProps> = ({
   socialMedias,
   content,
   onContentChange,
+  loadingSavePost,
 }) => {
   useEffect(() => {
     if (!selectedNetwork) setSelectedNetwork(socialMedias[0]);
@@ -67,41 +70,6 @@ const Modal: React.FC<ModalProps> = ({
   const handleIconClick = (network: string) => {
     setSelectedNetwork(network);
   };
-
-  // function checkConditions(): boolean {
-  //   let disabled = true;
-  //   if (content.twitter) {
-  //     if (Array.isArray(content.twitter)) {
-  //       if (content.twitter.length === 0) {
-          
-  //         return true;
-  //       }
-
-  //       const twitterContentArray = content.twitter[0] as TwitterContent;
-  //       if (twitterContentArray.text) {
-  //         disabled = false;
-  //       }
-  //     } else {
-  //       const twitterContent = content.twitter as TwitterContent;
-
-  //       if (twitterContent.text) {
-  //         disabled = false;
-  //       }
-  //     }
-
-  //     if (content.youtube && !disabled) {
-  //       const youtubeContent = content.youtube as YoutubeContent;
-  //       console.log(youtubeContent.media);
-  //       if (
-  //         youtubeContent.media === null ||
-  //         youtubeContent.media.name === "empty"
-  //       ) {
-  //         disabled = true;
-  //       }
-  //     }
-  //   }
-  //   return disabled;
-  // }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center text-black overflow-y-scroll">
@@ -156,7 +124,19 @@ const Modal: React.FC<ModalProps> = ({
             `}
             // disabled={checkConditions()}
           >
-            Save post
+            {!loadingSavePost && <span> Save post </span>}
+            {loadingSavePost && (
+              <div className="flex items-center gap-2">
+                <span>Sending...</span>
+                <ReactLoading
+                  type={"spin"}
+                  color={"#ffffff"}
+                  className="self-center"
+                  height={20}
+                  width={20}
+                />
+              </div>
+            )}
           </button>
         </div>
       </div>

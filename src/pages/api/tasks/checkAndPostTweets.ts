@@ -21,7 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     for (const tweet of pendingTweets) {
         const pendingId = tweet.id;
         const twitterMedia = await db.select().from(twitterMediaTable).where(eq(twitterMediaTable.clerkId, tweet.clerkId));
-        // console.log(twitterMedia);
 
         if (twitterMedia.length === 0) {
             return;
@@ -83,8 +82,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         posts.push(tweetObject);
-
-        console.log(posts);
 
         await db.update(twitterMediaTable).set({ posts: JSON.stringify(posts) }).where(eq(twitterMediaTable.clerkId, tweet.clerkId));
 

@@ -114,7 +114,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const form = new formidable.IncomingForm({ multiples: true });
 
     form.parse(req, async (err, fields: Fields) => {
-        console.log(fields);
         if (err) {
             return res.status(500).json({ error: "Error parsing form data" });
         }
@@ -126,8 +125,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const shareCommentary: string = fields.shareCommentary ? fields.shareCommentary[0] : "";
         const shareMediaCategory = fields.shareMediaCategory ? fields.shareMediaCategory[0] : "";
         let media: { status: string; media: string; }[] = [];
-        
-        console.log(assets);
 
         assets.forEach((asset: string) => {
             media.push({
