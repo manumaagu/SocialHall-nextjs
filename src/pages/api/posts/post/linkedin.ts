@@ -136,8 +136,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             });
         });
 
-        console.log(media);
-
         let contentToSend = {
             shareCommentary: shareCommentary,
             shareMediaCategory: shareMediaCategory,

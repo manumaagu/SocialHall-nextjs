@@ -64,7 +64,6 @@ interface Data {
 interface PostAnalytics {
   date: string;
   impressions: number;
-  retweets: number;
   likes: number;
   comments: number;
 }
@@ -189,12 +188,9 @@ const AnalyticsPage: React.FC = () => {
       return;
     }
 
-    const response = await fetch(
-      `${clientUrl}/api/analytics/${network}`,
-      {
-        method: "GET",
-      }
-    );
+    const response = await fetch(`${clientUrl}/api/analytics/${network}`, {
+      method: "GET",
+    });
 
     const newAnalytics = {
       network: network,
@@ -248,6 +244,8 @@ const AnalyticsPage: React.FC = () => {
             return dataEntry.count;
           });
 
+          console.log(formattedFollowers);
+
           datasets.push({
             label:
               entry.network.charAt(0).toUpperCase() + entry.network.slice(1),
@@ -260,23 +258,26 @@ const AnalyticsPage: React.FC = () => {
           });
           break;
         case "impressions":
-          const statisticsImpression = entry.data[0].posts;
+          const statisticsImpression: any = entry.data[0].posts;
           const impressions: { [date: string]: number } = {};
           const postCountImpressions: { [date: string]: number } = {};
 
-          statisticsImpression.forEach(
-            (statistic: { date: string; impressions: number }) => {
-              const date = new Date(statistic.date);
+          console.log(statisticsImpression);
+
+          statisticsImpression.forEach((statistic: any) => {
+            console.log(statistic);
+            statistic.statisticsArray.forEach((s: any) => {
+              const date = new Date(s.date);
               const formattedDate = date.toISOString().slice(0, 10);
               if (impressions[formattedDate]) {
-                impressions[formattedDate] += statistic.impressions;
+                impressions[formattedDate] += s.impressions;
                 postCountImpressions[formattedDate] += 1;
               } else {
-                impressions[formattedDate] = statistic.impressions;
+                impressions[formattedDate] = s.impressions;
                 postCountImpressions[formattedDate] = 1;
               }
-            }
-          );
+            });
+          });
 
           const formattedImpressions = Object.keys(impressions).map((date) => {
             newLabels.push(
@@ -306,19 +307,19 @@ const AnalyticsPage: React.FC = () => {
           const likes: { [date: string]: number } = {};
           const postCountLikes: { [date: string]: number } = {};
 
-          statisticsLikes.forEach(
-            (statistic: { date: string; likes: number }) => {
-              const date = new Date(statistic.date);
+          statisticsLikes.forEach((statistic: any) => {
+            statistic.statisticsArray.forEach((s: any) => {
+              const date = new Date(s.date);
               const formattedDate = date.toISOString().slice(0, 10);
               if (likes[formattedDate]) {
-                likes[formattedDate] += statistic.likes;
+                likes[formattedDate] += s.likes;
                 postCountLikes[formattedDate] += 1;
               } else {
-                likes[formattedDate] = statistic.likes;
+                likes[formattedDate] = s.likes;
                 postCountLikes[formattedDate] = 1;
               }
-            }
-          );
+            });
+          });
 
           const formattedLikes = Object.keys(likes).map((date) => {
             newLabels.push(
@@ -348,19 +349,19 @@ const AnalyticsPage: React.FC = () => {
           const comments: { [date: string]: number } = {};
           const postCountComments: { [date: string]: number } = {};
 
-          statisticsComments.forEach(
-            (statistic: { date: string; comments: number }) => {
-              const date = new Date(statistic.date);
+          statisticsComments.forEach((statistic: any) => {
+            statistic.statisticsArray.forEach((s: any) => {
+              const date = new Date(s.date);
               const formattedDate = date.toISOString().slice(0, 10);
               if (comments[formattedDate]) {
-                comments[formattedDate] += statistic.comments;
+                comments[formattedDate] += s.comments;
                 postCountComments[formattedDate] += 1;
               } else {
-                comments[formattedDate] = statistic.comments;
+                comments[formattedDate] = s.comments;
                 postCountComments[formattedDate] = 1;
               }
-            }
-          );
+            });
+          });
 
           const formattedComments = Object.keys(comments).map((date) => {
             newLabels.push(
@@ -383,17 +384,19 @@ const AnalyticsPage: React.FC = () => {
           });
           break;
         case "posts":
-          const statisticsPosts = entry.data[0].posts;
+          const statisticsPosts = entry.data[0].posts
           const posts: { [date: string]: number } = {};
 
-          statisticsPosts.forEach((statistic: { date: string }) => {
-            const date = new Date(statistic.date);
-            const formattedDate = date.toISOString().slice(0, 10);
-            if (posts[formattedDate]) {
-              posts[formattedDate] += 1;
-            } else {
-              posts[formattedDate] = 1;
-            }
+          console.log(statisticsPosts);
+
+          statisticsPosts.forEach((statistic: any) => {
+              const date = new Date(statistic.date);
+              const formattedDate = date.toISOString().slice(0, 10);
+              if (posts[formattedDate]) {
+                posts[formattedDate] += 1;
+              } else {
+                posts[formattedDate] = 1;
+              }
           });
 
           const formattedPosts = Object.keys(posts).map((date) => {
@@ -421,7 +424,7 @@ const AnalyticsPage: React.FC = () => {
     });
 
     setChartData({
-      labels: Array.from(new Set(newLabels)),
+      labels: Array.from(new Set(newLabels.sort((a,b) => a.localeCompare(b)))),
       datasets: datasets,
     });
   };
@@ -471,7 +474,7 @@ const AnalyticsPage: React.FC = () => {
     maintainAspectRatio: false,
     plugins: {
       customCanvasBackgroundColor: {
-        color: '#C24FAB',
+        color: "#C24FAB",
       },
       tooltip: {
         callbacks: {
@@ -497,7 +500,9 @@ const AnalyticsPage: React.FC = () => {
         <main className="flex flex-1">
           <div className="w-1/4 p-4 bg-gray-100 border-r-2 border-r-black-light mb-4">
             <h1 className="text-2xl font-bold mb-4 text-center">
-              <span className="hidden md:inline md:truncate md:overflow-auto ">Social Media</span>
+              <span className="hidden md:inline md:truncate md:overflow-auto ">
+                Social Media
+              </span>
               <FontAwesomeIcon
                 icon={faShareNodes}
                 className="inline md:hidden"
@@ -647,7 +652,7 @@ const AnalyticsPage: React.FC = () => {
             <div className="bg-white p-4 rounded w-full h-80vh">
               {(chartType === "line" && (
                 <Line
-                color="black"
+                  color="black"
                   data={chartData}
                   options={chartOptions}
                   updateMode="show"
@@ -655,7 +660,7 @@ const AnalyticsPage: React.FC = () => {
               )) ||
                 (chartType === "bar" && (
                   <Bar
-                  color="black"
+                    color="black"
                     data={chartData}
                     options={chartOptions}
                     updateMode="show"

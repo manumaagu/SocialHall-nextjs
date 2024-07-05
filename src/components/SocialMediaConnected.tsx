@@ -53,6 +53,7 @@ const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
   onUpdate: updateConnectedSocialMedias,
   onExpired = () => {},
 }) => {
+
   const calculateTimeLeft = (): Time => {
     if (!profile.date) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     const difference = Number(profile.date) - +new Date();
@@ -95,7 +96,7 @@ const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
 
   const handleRevoke = async (network: string) => {
     const confirmed = window.confirm(
-      `¿Estás seguro de que deseas desvincular tu cuenta de ${network}?`
+      `Are you sure you want to unlink your ${network} account?`
     );
     if (confirmed) {
       await revokeSocialMedia(network);
@@ -196,7 +197,7 @@ const SocialMediaConnected: React.FC<SocialMediaButtonProps> = ({
             onClick={network !== "Linkedin" ? handleRedirect : undefined}
             className={network !== "Linkedin" ? "cursor-pointer" : ""}
           >
-            {`Cuenta: `}
+            {`Account: `}
             <b>{username}</b>
           </p>
         </div>

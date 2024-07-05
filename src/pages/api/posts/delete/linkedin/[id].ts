@@ -126,7 +126,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const posts = media.posts ? JSON.parse(media.posts) : [];
         const newPosts = posts.filter((post: { id: string | string[]; }) => post.id !== postId);
         media.posts = JSON.stringify(newPosts);
-        await db.update(linkedinMediaTable).set({ posts: newPosts }).where(eq(linkedinMediaTable.clerkId, userId));
+        await db.update(linkedinMediaTable).set({ posts: JSON.stringify(newPosts) }).where(eq(linkedinMediaTable.clerkId, userId));
         res.status(200).json({ message: "Post deleted" });
     } else {
         res.status(404).json({ message: "Post not found" });

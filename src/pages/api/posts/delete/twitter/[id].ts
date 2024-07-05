@@ -112,8 +112,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     let tokenAccess = media.tokenAccess;
     let tokenRefresh = media.tokenRefresh;
     let tokenExpiration = media.tokenExpiration;
-    let client = new TwitterApi({ clientId: process.env.TWITTER_CLIENT_ID as string, clientSecret: process.env.TWITTER_CLIENT_SECRET as string });
-
+    let client = new TwitterApi({ clientId: process.env.TWITTER_CLIENT_ID as string });
 
     if (tokenExpiration && Date.now() >= tokenExpiration) {  // Token expired so refresh it
         const { client: refreshedClient, accessToken, refreshToken: newRefreshToken, expiresIn } = await client.refreshOAuth2Token(tokenRefresh!);
@@ -130,7 +129,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (tweet.data.deleted) {
         console.log(`[TWITTER] Tweet ${postId} deleted`);
         const newTweets = tweets.filter((tweet: { id: string | string[]; }) => tweet.id !== postId);
-        await db.update(twitterMediaTable).set({ posts: newTweets }).where(eq(twitterMediaTable.clerkId, userId));
+        await db.update(twitterMediaTable).set({ posts: JSON.stringify(newTweets) }).where(eq(twitterMediaTable.clerkId, userId));
         res.status(200).json({ message: "Tweet deleted" });
     } else {
         res.status(404).json({ message: "Tweet not found" });

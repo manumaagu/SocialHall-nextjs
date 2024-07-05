@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { youtubeMediaTable } from '@/db/schemes';
 import { db } from '@/db/db';
 import { verifyUser } from '@/utils/users';
+import { google } from 'googleapis';
 
 /**
  * @swagger
@@ -108,6 +109,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const media = youtubeMedia[0];
 
-    // TODO
+    const tokenRefresh = media.tokenRefresh;
 
+    const auth = new google.auth.OAuth2(
+        process.env.GOOGLE_CLIENT_ID,
+        process.env.GOOGLE_CLIENT_SECRET,
+        process.env.GOOGLE_CALLBACK_URL
+    );
+
+    auth.setCredentials({
+        refresh_token: tokenRefresh,
+    });
+
+    auth.on('tokens', async (tokens) => {
+        if (tokens.access_token) {
+            await db.update(youtubeMediaTable).set({ tokenAccess: tokens.access_token, tokenExpiration: tokens.expiry_date }).where(eq(youtubeMediaTable.clerkId, userId));
+        }
+    });
+
+    const youtube = google.youtube({
+        version: 'v3',
+        auth
+    });
+
+    const posts = media.posts ? JSON.parse(media.posts!) : [];
+
+
+    youtube.videos.delete({ id: postId.toString() }).then(async () => {
+
+        const newPosts = posts.filter((post: any) => post.id !== postId);
+        await db.update(youtubeMediaTable).set({ posts: JSON.stringify(newPosts) }).where(eq(youtubeMediaTable.clerkId, userId));
+
+        return res.status(200).json({ message: `Youtube post ${postId.toString()} deleted` });
+    }).catch((err) => {
+        console.error(err);
+        return res.status(404).json({ message: "Youtube post not found" });
+    });
 }

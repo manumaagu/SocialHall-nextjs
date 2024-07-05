@@ -7,13 +7,13 @@ import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import ContentModal from "../modals/ProgramContentModal";
 import NoMediasModal from "../modals/NoMediasConnectedModal";
 import { DateSelectArg, EventClickArg } from "@fullcalendar/core";
-import { useAuth } from "@clerk/clerk-react";
 import {
   AllSocialMediaContent,
   LinkedinContent,
   TwitterContent,
   YoutubeContent,
 } from "../interfaces/social-media";
+import toast, { Toaster } from "react-hot-toast";
 
 interface EventInfo {
   timeText: string;
@@ -42,6 +42,9 @@ const PlannerPage = () => {
   const handleContentChange = useCallback((content: AllSocialMediaContent) => {
     setContents(content);
   }, []);
+
+  const notifyPost = () => toast.success("Post scheduled successfully!");
+  const notifyDelete = () => toast.error("Post deleted successfully!");
 
   const saveContent = useCallback(async () => {
     const dateTime = `${postDate} ${time}`;
@@ -89,7 +92,6 @@ const PlannerPage = () => {
       }
 
       if (mediaToUpload.has("media[0]")) {
-
         const response = await fetch(
           `${clientUrl}/api/upload-media/${network}`,
           {
@@ -106,42 +108,21 @@ const PlannerPage = () => {
 
         const assets = data.assets;
 
-        console.log(assets);
-
-        // let mediaArray: { status: string; media: string }[] = [];
-
-        // assets.forEach((media: any) => {
-        //   const mediaObj = {
-        //     status: "READY",
-        //     media: media,
-        //   };
-        //   mediaArray.push(mediaObj);
-        // });
-
-        // console.log(mediaArray);
-
-        // mediaArray.forEach((obj, index) => {
-        //   contentToSend.append(`media[${index}][status]`, obj.status);
-        //   contentToSend.append(`media[${index}][media]`, obj.media);
-        // });
-
         contentToSend.append("assets", JSON.stringify(assets));
       }
 
       try {
-        const response = await fetch(
-          `${clientUrl}/api/posts/post/${network}`,
-          {
-            method: "POST",
-            body: contentToSend,
-          }
-        );
+        const response = await fetch(`${clientUrl}/api/posts/post/${network}`, {
+          method: "POST",
+          body: contentToSend,
+        });
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
 
         getEvents();
+        notifyPost();
       } catch (err) {
         console.error(err);
       }
@@ -234,6 +215,7 @@ const PlannerPage = () => {
           throw new Error("Network response was not ok");
         }
 
+        notifyDelete();
         event.remove();
       }
     }
@@ -283,15 +265,12 @@ const PlannerPage = () => {
 
   const getMedias = useCallback(async () => {
     try {
-      const response = await fetch(
-        `${clientUrl}/api/auth/connected-profiles`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${clientUrl}/api/auth/connected-profiles`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -312,7 +291,7 @@ const PlannerPage = () => {
 
   return (
     <>
-      <div className="mx-12">
+      <div className="mx-12 mb-12">
         {isLoading ? (
           <p>Loading...</p>
         ) : (
@@ -367,6 +346,7 @@ const PlannerPage = () => {
             ></NoMediasModal>
           </div>
         )}
+        <Toaster position="top-right" reverseOrder={false} />
       </div>
     </>
   );

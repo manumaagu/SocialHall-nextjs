@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRouter } from "next/router";
-// import "../styles/header.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarAlt,
@@ -40,7 +39,7 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <header className="bg-principal-color w-screen min-h-16 flex justify-between items-center px-14 mb-4">
+    <header className="bg-principal-color min-h-16 flex justify-between items-center px-14 mb-4">
       <Link href="/" legacyBehavior>
         <a className="flex items-center gap-4">
           <img

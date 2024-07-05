@@ -130,9 +130,9 @@ const SocialMediaTextareaLinkedin: React.FC<
       >
         <input {...getInputProps()} />
         {isDragActive ? (
-          <p>Arrastra y suelta los archivos aquí...</p>
+          <p>Drag and drop here the files...</p>
         ) : (
-          <p>Haz clic o arrastra y suelta los archivos aquí para subir</p>
+          <p>Click here or drag and drop your files here</p>
         )}
       </div>
       <div className="flex flex-wrap">
@@ -155,7 +155,7 @@ const SocialMediaTextareaLinkedin: React.FC<
               onClick={() => handleDelete(file)}
               className="block mt-2 text-sm text-red-500"
             >
-              Eliminar
+              Delete
             </button>
           </div>
         ))}

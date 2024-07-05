@@ -123,7 +123,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const followers = JSON.parse(media.profile_followers!) ?? [];
 
     const results = [];
-
+    
     results.push({
         posts: posts,
         followers: followers

@@ -116,26 +116,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         let linkedinMedia = await db.select().from(linkedinMediaTable).where(eq(linkedinMediaTable.clerkId, userId));
 
-        let followArray: any[] = [];
+        // let followArray: any[] = [];
 
-        for (let i = 0; i < 3; i++) {
-            const date = new Date();
-            date.setDate(date.getDate() + i); 
+        // for (let i = 0; i < 3; i++) {
+        //     const date = new Date();
+        //     date.setDate(date.getDate() + i); 
 
-            const followObject = {
-                date: date,
-                count: Math.floor(Math.random() * 1001),
-            };
+        //     const followObject = {
+        //         date: date,
+        //         count: Math.floor(Math.random() * 1001),
+        //     };
 
-            followArray.push(followObject);
-        }
+        //     followArray.push(followObject);
+        // }
 
-        // const followObject = {
-        //     date: Date.now(),
-        //     count: Math.floor(Math.random() * 1001),
-        // };
+        const followObject = {
+            date: Date.now(),
+            count: Math.floor(Math.random() * 1001),
+        };
 
-        // const followArray = [followObject];
+        const followArray = [followObject];
 
         if (linkedinMedia.length === 0) {
             const newLinkedinMedia: InsertLinkedinMedia = {

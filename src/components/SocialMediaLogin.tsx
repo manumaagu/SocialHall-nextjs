@@ -28,13 +28,13 @@ const SocialMediaLogin: React.FC<Props> = ({
   return (
     <div className="social-media-login-container">
       <p className="social-media-btn-title">
-        Conectar cuenta de {socialMediaName}
+        Connect {socialMediaName} account
       </p>
       <div
         onClick={handleClick}
         className={`social-media-btn ${socialMediaName.toLowerCase()}`}
       >
-        <div>Conectar {socialMediaName}</div>
+        <div>Connect {socialMediaName}</div>
         <FontAwesomeIcon
           icon={icon}
           className={`social-media-btn-icon ${socialMediaName.toLowerCase()}`}

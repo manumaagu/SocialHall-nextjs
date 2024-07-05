@@ -9,6 +9,7 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import SocialMediaConnected from "../SocialMediaConnected";
+import toast, { Toaster } from "react-hot-toast";
 
 interface SocialProfiles {
   twitter?: Profile;
@@ -73,7 +74,11 @@ const ConnectSocialMedias: React.FC = () => {
     fetchData();
   }, []);
 
+  const notifyRevoke = () =>
+    toast.success('Account revoked successfully!');
+
   const updateConnectedSocialMedias = () => {
+    notifyRevoke();
     fetchData();
   };
   if (error) return <div>Error cargando los datos.</div>;
@@ -86,9 +91,9 @@ const ConnectSocialMedias: React.FC = () => {
       {!loading && (
         <>
           <h1 className="text-6xl text-center mt-10">
-            Conecta tus redes sociales
+            Connect your social media accounts
           </h1>
-          <div className="flex flex-col items-center mt-8">
+          <div className="flex flex-col items-center my-8">
             <div className="grid grid-cols-1 gap-20 border-l border-r px-8 lg:grid-cols-2">
               {data?.profiles.twitter ? (
                 <SocialMediaConnected
@@ -175,6 +180,7 @@ const ConnectSocialMedias: React.FC = () => {
                 />
               )}
             </div>
+            <Toaster position="top-right" reverseOrder={false} />
           </div>
         </>
       )}
