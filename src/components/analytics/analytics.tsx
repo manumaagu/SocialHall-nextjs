@@ -231,7 +231,6 @@ const AnalyticsPage: React.FC = () => {
     selectedData.forEach((entry) => {
       switch (selectedMetric) {
         case "followers":
-          console.log(entry.data);
           const followers: Array<{ date: string; count: number }> =
             entry.data[0].followers;
           const formattedFollowers = followers.map((dataEntry) => {
@@ -243,8 +242,6 @@ const AnalyticsPage: React.FC = () => {
             newLabels.push(formattedDate);
             return dataEntry.count;
           });
-
-          console.log(formattedFollowers);
 
           datasets.push({
             label:
@@ -262,10 +259,7 @@ const AnalyticsPage: React.FC = () => {
           const impressions: { [date: string]: number } = {};
           const postCountImpressions: { [date: string]: number } = {};
 
-          console.log(statisticsImpression);
-
           statisticsImpression.forEach((statistic: any) => {
-            console.log(statistic);
             statistic.statisticsArray.forEach((s: any) => {
               const date = new Date(s.date);
               const formattedDate = date.toISOString().slice(0, 10);
@@ -386,8 +380,6 @@ const AnalyticsPage: React.FC = () => {
         case "posts":
           const statisticsPosts = entry.data[0].posts
           const posts: { [date: string]: number } = {};
-
-          console.log(statisticsPosts);
 
           statisticsPosts.forEach((statistic: any) => {
               const date = new Date(statistic.date);

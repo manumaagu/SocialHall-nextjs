@@ -126,8 +126,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(404).json({ error: "Youtube account not found" });
     }
 
-    let newFile: File;
-
     const form = new formidable.IncomingForm();
 
     form.parse(req, async (err, fields: Fields, files: Files) => {
