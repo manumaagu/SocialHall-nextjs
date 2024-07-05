@@ -84,7 +84,7 @@ const SocialMediaTextareaYoutube: React.FC<SocialMediaTextareaYoutubeProps> = ({
 
   const onDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 1) {
-      alert("Solo se puede subir un video.");
+      alert("You can only upload one video.");
       return;
     }
     const newFile = acceptedFiles[0];
@@ -94,7 +94,7 @@ const SocialMediaTextareaYoutube: React.FC<SocialMediaTextareaYoutubeProps> = ({
       });
       setFile(fileWithPreview);
     } else {
-      alert("Solo se pueden subir archivos de video.");
+      alert("You can only upload video files.");
     }
     onContentChange({
       title: title,
@@ -163,9 +163,9 @@ const SocialMediaTextareaYoutube: React.FC<SocialMediaTextareaYoutubeProps> = ({
       >
         <input {...getInputProps()} />
         {isDragActive ? (
-          <p>Arrastra y suelta los archivos aquí...</p>
+          <p>Drag and drop here the files...</p>
         ) : (
-          <p>Haz clic o arrastra y suelta los archivos aquí para subir</p>
+          <p>Click here or drag and drop your files here</p>
         )}
       </div>
       <div className="flex flex-wrap">
@@ -180,7 +180,7 @@ const SocialMediaTextareaYoutube: React.FC<SocialMediaTextareaYoutubeProps> = ({
               onClick={handleDelete}
               className="block mt-2 text-sm text-red-500"
             >
-              Eliminar
+              Delete
             </button>
           </div>
         )}
