@@ -114,6 +114,7 @@ const Modal: React.FC<ModalProps> = ({
           <button
             onClick={onClose}
             className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+            disabled={loadingSavePost}
           >
             Close
           </button>
