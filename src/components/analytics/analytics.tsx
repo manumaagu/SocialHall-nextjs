@@ -220,7 +220,7 @@ const AnalyticsPage: React.FC = () => {
     const newLabels: string[] = [];
     const datasets: {
       label: string;
-      data: number[];
+      data: any;
       fill: boolean;
       borderColor: string;
       backgroundColor?: string;
@@ -240,8 +240,10 @@ const AnalyticsPage: React.FC = () => {
               day: "numeric",
             });
             newLabels.push(formattedDate);
-            return dataEntry.count;
+            return {x: formattedDate, y: dataEntry.count};
           });
+
+          console.log(formattedFollowers);
 
           datasets.push({
             label:
@@ -280,7 +282,7 @@ const AnalyticsPage: React.FC = () => {
                 day: "numeric",
               })
             );
-            return impressions[date];
+            return {x: new Date(date).toLocaleDateString("es-ES", {month: "short", day: "numeric"}), y: impressions[date]};
           });
 
           datasets.push({
@@ -322,7 +324,7 @@ const AnalyticsPage: React.FC = () => {
                 day: "numeric",
               })
             );
-            return likes[date];
+            return {x: new Date(date).toLocaleDateString("es-ES", {month: "short", day: "numeric"}), y: likes[date]};
           });
 
           datasets.push({
@@ -364,7 +366,7 @@ const AnalyticsPage: React.FC = () => {
                 day: "numeric",
               })
             );
-            return comments[date];
+            return {x: new Date(date).toLocaleDateString("es-ES", {month: "short", day: "numeric"}), y: comments[date]};
           });
 
           datasets.push({
@@ -398,7 +400,7 @@ const AnalyticsPage: React.FC = () => {
                 day: "numeric",
               })
             );
-            return posts[date];
+            return {x: new Date(date).toLocaleDateString("es-ES", {month: "short", day: "numeric"}), y: posts[date]};
           });
 
           datasets.push({
@@ -416,7 +418,7 @@ const AnalyticsPage: React.FC = () => {
     });
 
     setChartData({
-      labels: Array.from(new Set(newLabels.sort((a,b) => a.localeCompare(b)))),
+      labels: Array.from(new Set(newLabels)),
       datasets: datasets,
     });
   };
@@ -471,6 +473,7 @@ const AnalyticsPage: React.FC = () => {
       tooltip: {
         callbacks: {
           title: function (context: any) {
+            if(selectedMetric === "followers") return context[0].label;
             const postCount =
               context[0].chart.config._config.data.datasets[0].postCount;
             if (!postCount) return context[0].label;
