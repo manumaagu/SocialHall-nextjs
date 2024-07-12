@@ -220,7 +220,7 @@ const AnalyticsPage: React.FC = () => {
     const newLabels: string[] = [];
     const datasets: {
       label: string;
-      data: number[];
+      data: any;
       fill: boolean;
       borderColor: string;
       backgroundColor?: string;
@@ -240,7 +240,7 @@ const AnalyticsPage: React.FC = () => {
               day: "numeric",
             });
             newLabels.push(formattedDate);
-            return dataEntry.count;
+            return { x: formattedDate, y: dataEntry.count };
           });
 
           datasets.push({
@@ -280,7 +280,13 @@ const AnalyticsPage: React.FC = () => {
                 day: "numeric",
               })
             );
-            return impressions[date];
+            return {
+              x: new Date(date).toLocaleDateString("es-ES", {
+                month: "short",
+                day: "numeric",
+              }),
+              y: impressions[date],
+            };
           });
 
           datasets.push({
@@ -322,7 +328,13 @@ const AnalyticsPage: React.FC = () => {
                 day: "numeric",
               })
             );
-            return likes[date];
+            return {
+              x: new Date(date).toLocaleDateString("es-ES", {
+                month: "short",
+                day: "numeric",
+              }),
+              y: likes[date],
+            };
           });
 
           datasets.push({
@@ -364,7 +376,13 @@ const AnalyticsPage: React.FC = () => {
                 day: "numeric",
               })
             );
-            return comments[date];
+            return {
+              x: new Date(date).toLocaleDateString("es-ES", {
+                month: "short",
+                day: "numeric",
+              }),
+              y: comments[date],
+            };
           });
 
           datasets.push({
@@ -378,17 +396,17 @@ const AnalyticsPage: React.FC = () => {
           });
           break;
         case "posts":
-          const statisticsPosts = entry.data[0].posts
+          const statisticsPosts = entry.data[0].posts;
           const posts: { [date: string]: number } = {};
 
           statisticsPosts.forEach((statistic: any) => {
-              const date = new Date(statistic.date);
-              const formattedDate = date.toISOString().slice(0, 10);
-              if (posts[formattedDate]) {
-                posts[formattedDate] += 1;
-              } else {
-                posts[formattedDate] = 1;
-              }
+            const date = new Date(statistic.date);
+            const formattedDate = date.toISOString().slice(0, 10);
+            if (posts[formattedDate]) {
+              posts[formattedDate] += 1;
+            } else {
+              posts[formattedDate] = 1;
+            }
           });
 
           const formattedPosts = Object.keys(posts).map((date) => {
@@ -398,7 +416,13 @@ const AnalyticsPage: React.FC = () => {
                 day: "numeric",
               })
             );
-            return posts[date];
+            return {
+              x: new Date(date).toLocaleDateString("es-ES", {
+                month: "short",
+                day: "numeric",
+              }),
+              y: posts[date],
+            };
           });
 
           datasets.push({
@@ -415,9 +439,38 @@ const AnalyticsPage: React.FC = () => {
       }
     });
 
+    console.log(Array.from(new Set(newLabels)));
+
     setChartData({
-      labels: Array.from(new Set(newLabels.sort((a,b) => a.localeCompare(b)))),
+      labels: sortDates(Array.from(new Set(newLabels))),
       datasets: datasets,
+    });
+  };
+
+  const months: { [key: string]: number } = {
+    ene: 1,
+    feb: 2,
+    mar: 3,
+    abr: 4,
+    may: 5,
+    jun: 6,
+    jul: 7,
+    ago: 8,
+    sep: 9,
+    oct: 10,
+    nov: 11,
+    dic: 12,
+  };
+
+  const sortDates = (array: string[]): string[] => {
+    return array.sort((a, b) => {
+      const [dayA, monthA] = a.split(" ");
+      const [dayB, monthB] = b.split(" ");
+
+      const dateA = new Date(2024, months[monthA], parseInt(dayA)); // Using a fixed year
+      const dateB = new Date(2024, months[monthB], parseInt(dayB));
+
+      return dateA.getTime() - dateB.getTime();
     });
   };
 
@@ -471,6 +524,7 @@ const AnalyticsPage: React.FC = () => {
       tooltip: {
         callbacks: {
           title: function (context: any) {
+            if (selectedMetric === "followers") return context[0].label;
             const postCount =
               context[0].chart.config._config.data.datasets[0].postCount;
             if (!postCount) return context[0].label;
